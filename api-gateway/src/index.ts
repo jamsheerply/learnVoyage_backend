@@ -13,3 +13,6 @@ app.listen(port, () => {
 app.get("/", (req: Request, res: Response) => {
   res.send("hello world");
 });
+
+//npm run build
+//npm start

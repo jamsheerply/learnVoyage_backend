@@ -12,14 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
-const dbConnections_1 = __importDefault(require("../infrastructure/database/dbConnections"));
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-app.use("/api", userRoutes_1.default);
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, dbConnections_1.default)();
-    console.log(`server is runing on port ${PORT}`);
-}));
+exports.signupRepository = void 0;
+const userModel_1 = __importDefault(require("../model/userModel"));
+exports.signupRepository = {
+    create(userData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const newUser = yield userModel_1.default.create(userData);
+                return newUser;
+            }
+            catch (error) {
+                throw new Error("failed to create user in database");
+            }
+        });
+    },
+};

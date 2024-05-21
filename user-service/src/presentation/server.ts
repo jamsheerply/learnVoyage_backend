@@ -1,15 +1,16 @@
 import express, { Application } from "express";
-import { userRoutes } from "../infrastructure/routes/user.routes";
+import userRoutes from "./routes/userRoutes";
+import dbConnections from "../infrastructure/database/dbConnections";
 
-const port: Number = 3000;
 const app: Application = express();
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use("/", userRoutes);
+app.use("/api", userRoutes);
 
-app.listen(port, () => {
-  console.log(`service is runing at ${port}`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, async () => {
+  await dbConnections();
+  console.log(`server is runing on port ${PORT}`);
 });
-
-export default app;

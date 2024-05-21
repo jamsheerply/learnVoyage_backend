@@ -10,30 +10,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signupController = void 0;
-const addUserValidation_1 = require("../../utils/validation/addUserValidation");
-const signupController = (dependencies) => {
-    const { useCase: { signupUseCase }, } = dependencies;
-    return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const userData = req.body;
-            const { error } = addUserValidation_1.addUserValidation.validate(userData);
-            if (error) {
-                return res.status(400).json({
-                    success: false,
-                    message: error,
-                    data: {},
-                });
-            }
-            const user = yield signupUseCase(dependencies).execute(userData);
-            return res.status(200).json({
-                success: true,
-                message: "User logged in successfully",
-                data: user,
-            });
-        }
-        catch (error) {
-            throw new Error(error);
-        }
-    });
-};
+const bcrypt_1 = require("../../infrastructure/security/bcrypt");
+const signupRepository_1 = require("../../infrastructure/database/repositories/signupRepository");
+const signupUseCase_1 = require("../../application/signupUseCase");
+// Create an instance of the hashing service
+const hashingService = new bcrypt_1.BcryptHashingService();
+const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { firstName, email, password } = req.body;
+        const newUser = yield (0, signupUseCase_1.signupUseCase)(signupRepository_1.signupRepository, hashingService)({
+            firstName,
+            email,
+            password,
+        });
+        return res.status(201).json({
+            success: true,
+            data: newUser,
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: "Failed to sign up user",
+        });
+    }
+});
 exports.signupController = signupController;

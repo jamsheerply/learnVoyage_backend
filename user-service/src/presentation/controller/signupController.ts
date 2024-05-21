@@ -1,30 +1,31 @@
-import { IDependencies } from "../../domain/interfaces";
-import { NextFunction, Request, Response } from "express";
-import { addUserValidation } from "../../utils/validation/addUserValidation";
+// Controller for handling signup requests.
+import { Request, Response } from "express";
+import { BcryptHashingService } from "../../infrastructure/security/bcrypt";
+import { signupRepository } from "../../infrastructure/database/repositories/signupRepository";
+import { signupUseCase } from "../../application/signupUseCase";
 
-export const signupController = (dependencies: IDependencies) => {
-  const {
-    useCase: { signupUseCase },
-  } = dependencies;
-  return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userData = req.body;
-      const { error } = addUserValidation.validate(userData);
-      if (error) {
-        return res.status(400).json({
-          success: false,
-          message: error,
-          data: {},
-        });
-      }
-      const user = await signupUseCase(dependencies).execute(userData);
-      return res.status(200).json({
-        success: true,
-        message: "User logged in successfully",
-        data: user,
-      });
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  };
+// Create an instance of the hashing service
+const hashingService = new BcryptHashingService();
+
+export const signupController = async (req: Request, res: Response) => {
+  try {
+    const { firstName, email, password } = req.body;
+    const newUser = await signupUseCase(
+      signupRepository,
+      hashingService
+    )({
+      firstName,
+      email,
+      password,
+    });
+    return res.status(201).json({
+      success: true,
+      data: newUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: "Failed to sign up user",
+    });
+  }
 };

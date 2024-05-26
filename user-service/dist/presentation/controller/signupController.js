@@ -17,9 +17,10 @@ const signupUseCase_1 = require("../../application/signupUseCase");
 const hashingService = new bcrypt_1.BcryptHashingService();
 const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, email, password } = req.body;
+        const { firstName, lastName, email, password } = req.body;
         const newUser = yield (0, signupUseCase_1.signupUseCase)(signupRepository_1.signupRepository, hashingService)({
             firstName,
+            lastName,
             email,
             password,
         });

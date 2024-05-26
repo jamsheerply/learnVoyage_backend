@@ -9,12 +9,13 @@ const hashingService = new BcryptHashingService();
 
 export const signupController = async (req: Request, res: Response) => {
   try {
-    const { firstName, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
     const newUser = await signupUseCase(
       signupRepository,
       hashingService
     )({
       firstName,
+      lastName,
       email,
       password,
     });

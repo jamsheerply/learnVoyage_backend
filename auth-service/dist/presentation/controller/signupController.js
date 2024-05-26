@@ -10,30 +10,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signupController = void 0;
-const bcrypt_1 = require("../../infrastructure/security/bcrypt");
-const signupRepository_1 = require("../../infrastructure/database/repositories/signupRepository");
-const signupUseCase_1 = require("../../application/signupUseCase");
-// Create an instance of the hashing service
-const hashingService = new bcrypt_1.BcryptHashingService();
+const producer_1 = require("../../infrastructure/messaging/producer");
+const rMqConnectins_1 = require("../../infrastructure/messaging/rMqConnectins");
 const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName, email, password } = req.body;
-        const newUser = yield (0, signupUseCase_1.signupUseCase)(signupRepository_1.signupRepository, hashingService)({
-            firstName,
-            lastName,
-            email,
-            password,
-        });
-        return res.status(201).json({
-            success: true,
-            data: newUser,
-        });
+        yield (0, rMqConnectins_1.connectToRabbitMQ)();
+        yield (0, rMqConnectins_1.createQueue)("user-service");
+        yield (0, producer_1.sendMessageToQueue)("user-service", "addUser", JSON.stringify(req.body));
+        return res.status(201).json({ success: true, data: req.body });
     }
     catch (error) {
-        return res.status(500).json({
-            success: false,
-            error: "Failed to sign up user",
-        });
+        return res
+            .status(500)
+            .json({ success: false, error: "Failed to sign up user" });
     }
 });
 exports.signupController = signupController;

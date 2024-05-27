@@ -1,4 +1,4 @@
-import amqp, { Connection, Channel } from "amqplib";
+import amqp, { Connection, Channel, Replies } from "amqplib";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,16 +17,24 @@ const connectToRabbitMQ = async (): Promise<void> => {
   }
 };
 
-const createQueue = async (queueName: string): Promise<void> => {
+const createQueue = async (
+  queueName: string,
+  options = {}
+): Promise<Replies.AssertQueue> => {
   try {
     if (channel) {
-      await channel.assertQueue(queueName, { durable: true }); // Ensure durable is true
-      console.log(`Queue ${queueName} created or retrieved successfully`);
+      const queue = await channel.assertQueue(queueName, {
+        durable: true,
+        ...options,
+      });
+      console.log(`Queue ${queue.queue} created or retrieved successfully`);
+      return queue;
     } else {
-      console.error("RabbitMQ channel is not initialized");
+      throw new Error("RabbitMQ channel is not initialized");
     }
   } catch (error) {
     console.error(`Failed to create or retrieve queue ${queueName}:`, error);
+    throw error;
   }
 };
 

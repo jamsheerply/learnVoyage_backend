@@ -1,21 +1,16 @@
-import { channel } from "./rMqConnectins";
+import { channel } from "./RMQConnectins";
 
 const sendMessageToQueue = async (
   queueName: string,
-  messageType: string,
-  message: string
+  msgType: string,
+  message: string,
+  options: any = {}
 ): Promise<void> => {
   try {
     if (channel) {
-      await channel.assertQueue(queueName, { durable: true });
-      const messageContent = JSON.stringify({
-        type: messageType,
-        payload: message,
-      });
-      await channel.sendToQueue(queueName, Buffer.from(messageContent), {
-        persistent: true,
-      });
-      console.log(` [x] Sent ${messageType} message to queue ${queueName}`);
+      const msgContent = JSON.stringify({ type: msgType, payload: message });
+      await channel.sendToQueue(queueName, Buffer.from(msgContent), options);
+      console.log(`Sent message to queue ${queueName}: ${msgContent}`);
     } else {
       console.error("RabbitMQ channel is not initialized");
     }

@@ -1,6 +1,6 @@
-import { IUser } from "../domain/entities/user.entity";
-import { IUserRepository } from "../domain/interfaces/repositories/IUserRepository";
-import { IHashingService } from "../domain/interfaces/services/IHashingService";
+import { IUser } from "../../domain/entities/user.entity";
+import { IUserRepository } from "../../domain/interfaces/repositories/IUserRepository";
+import { IHashingService } from "../../domain/interfaces/services/IHashingService";
 
 export const signupUseCase = (
   userRepository: IUserRepository,

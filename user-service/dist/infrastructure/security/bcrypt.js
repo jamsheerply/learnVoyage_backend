@@ -12,14 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BcryptHashingService = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-class BcryptHashingService {
-    hash(password) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const saltRounds = 10;
-            return bcrypt_1.default.hash(password, saltRounds);
-        });
-    }
-}
-exports.BcryptHashingService = BcryptHashingService;
+const BcryptHashingService = {
+    hash: (password) => __awaiter(void 0, void 0, void 0, function* () {
+        const saltRounds = 10;
+        return bcrypt_1.default.hash(password, saltRounds);
+    }),
+    compare: (password, hashedPassword) => __awaiter(void 0, void 0, void 0, function* () {
+        // Implement this method
+        return bcrypt_1.default.compare(password, hashedPassword);
+    }),
+};
+exports.default = BcryptHashingService;

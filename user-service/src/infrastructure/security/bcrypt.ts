@@ -1,9 +1,18 @@
 import bcrypt from "bcrypt";
 import { IHashingService } from "../../domain/interfaces/services/IHashingService";
 
-export class BcryptHashingService implements IHashingService {
-  async hash(password: string): Promise<string> {
+const BcryptHashingService: IHashingService = {
+  hash: async (password: string): Promise<string> => {
     const saltRounds = 10;
     return bcrypt.hash(password, saltRounds);
-  }
-}
+  },
+  compare: async (
+    password: string,
+    hashedPassword: string
+  ): Promise<boolean> => {
+    // Implement this method
+    return bcrypt.compare(password, hashedPassword);
+  },
+};
+
+export default BcryptHashingService;

@@ -8,17 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signupController = void 0;
-const bcrypt_1 = require("../../infrastructure/security/bcrypt");
 const signupRepository_1 = require("../../infrastructure/database/repositories/signupRepository");
 const signupUseCase_1 = require("../../application/signupUseCase");
-// Create an instance of the hashing service
-const hashingService = new bcrypt_1.BcryptHashingService();
+const bcrypt_1 = __importDefault(require("../../infrastructure/security/bcrypt"));
 const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName, email, password } = req.body;
-        const newUser = yield (0, signupUseCase_1.signupUseCase)(signupRepository_1.signupRepository, hashingService)({
+        const newUser = yield (0, signupUseCase_1.signupUseCase)(signupRepository_1.signupRepository, bcrypt_1.default)({
             firstName,
             lastName,
             email,

@@ -1,9 +1,9 @@
 import { IUser } from "../../../domain/entities/user.entity";
 import { IUserRepository } from "../../../domain/interfaces/repositories/IUserRepository";
-import User from "../model/userModel";
+import User from "../models/userModel";
 
-export const signupRepository: IUserRepository = {
-  async create(userData: IUser): Promise<IUser | null> {
+export const UserRepository: IUserRepository = {
+  async addUser(userData: IUser): Promise<IUser | null> {
     try {
       const newUser = await User.create(userData);
       return newUser;
@@ -12,7 +12,6 @@ export const signupRepository: IUserRepository = {
     }
   },
   async findByEmail(email: string): Promise<IUser | null> {
-    // Implement this method
     try {
       const user = await User.findOne({ email }).lean();
       return user;

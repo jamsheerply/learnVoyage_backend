@@ -15,6 +15,9 @@ const signupUseCase = (userRepository, hashingService) => {
         try {
             const hashedPassword = yield hashingService.hash(userData.password);
             const newUser = yield userRepository.create(Object.assign(Object.assign({}, userData), { password: hashedPassword }));
+            if (!newUser) {
+                throw new Error("Failed to create user");
+            }
             return newUser;
         }
         catch (error) {

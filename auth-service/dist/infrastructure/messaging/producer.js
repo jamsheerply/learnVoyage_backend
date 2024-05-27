@@ -10,19 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendMessageToQueue = void 0;
-const rMqConnectins_1 = require("./rMqConnectins");
-const sendMessageToQueue = (queueName, messageType, message) => __awaiter(void 0, void 0, void 0, function* () {
+const RMQConnectins_1 = require("./RMQConnectins");
+const sendMessageToQueue = (queueName_1, msgType_1, message_1, ...args_1) => __awaiter(void 0, [queueName_1, msgType_1, message_1, ...args_1], void 0, function* (queueName, msgType, message, options = {}) {
     try {
-        if (rMqConnectins_1.channel) {
-            yield rMqConnectins_1.channel.assertQueue(queueName, { durable: true });
-            const messageContent = JSON.stringify({
-                type: messageType,
-                payload: message,
-            });
-            yield rMqConnectins_1.channel.sendToQueue(queueName, Buffer.from(messageContent), {
-                persistent: true,
-            });
-            console.log(` [x] Sent ${messageType} message to queue ${queueName}`);
+        if (RMQConnectins_1.channel) {
+            const msgContent = JSON.stringify({ type: msgType, payload: message });
+            yield RMQConnectins_1.channel.sendToQueue(queueName, Buffer.from(msgContent), options);
+            console.log(`Sent message to queue ${queueName}: ${msgContent}`);
         }
         else {
             console.error("RabbitMQ channel is not initialized");

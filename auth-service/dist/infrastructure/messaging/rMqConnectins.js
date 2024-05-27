@@ -31,18 +31,20 @@ const connectToRabbitMQ = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.connectToRabbitMQ = connectToRabbitMQ;
-const createQueue = (queueName) => __awaiter(void 0, void 0, void 0, function* () {
+const createQueue = (queueName_1, ...args_1) => __awaiter(void 0, [queueName_1, ...args_1], void 0, function* (queueName, options = {}) {
     try {
         if (channel) {
-            yield channel.assertQueue(queueName, { durable: true }); // Ensure durable is true
-            console.log(`Queue ${queueName} created or retrieved successfully`);
+            const queue = yield channel.assertQueue(queueName, Object.assign({ durable: true }, options));
+            console.log(`Queue ${queue.queue} created or retrieved successfully`);
+            return queue;
         }
         else {
-            console.error("RabbitMQ channel is not initialized");
+            throw new Error("RabbitMQ channel is not initialized");
         }
     }
     catch (error) {
         console.error(`Failed to create or retrieve queue ${queueName}:`, error);
+        throw error;
     }
 });
 exports.createQueue = createQueue;

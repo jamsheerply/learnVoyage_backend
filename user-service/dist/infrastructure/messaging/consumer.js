@@ -16,15 +16,22 @@ const consumeMessages = (queueName) => __awaiter(void 0, void 0, void 0, functio
     if (rMqConnectins_1.channel) {
         yield rMqConnectins_1.channel.assertQueue(queueName, { durable: true });
         console.log(`Waiting for messages in queue: ${queueName}...`);
-        rMqConnectins_1.channel.consume(queueName, (message) => {
+        rMqConnectins_1.channel.consume(queueName, (message) => __awaiter(void 0, void 0, void 0, function* () {
             if (message) {
-                const msgContent = JSON.parse(message.content.toString());
-                console.log(`Received message: ${JSON.stringify(msgContent)}`);
-                (0, handleConsumer_1.handleConsumer)(msgContent.type, msgContent.payload);
-                rMqConnectins_1.channel === null || rMqConnectins_1.channel === void 0 ? void 0 : rMqConnectins_1.channel.ack(message);
-                console.log(`Acknowledged message: ${JSON.stringify(msgContent)}`);
+                try {
+                    const msgContent = JSON.parse(message.content.toString());
+                    console.log(`Received message: ${JSON.stringify(msgContent)}`);
+                    console.log(`Message properties: ${JSON.stringify(message.properties)}`);
+                    yield (0, handleConsumer_1.handleConsumer)(msgContent.type, msgContent.payload, message.properties);
+                    rMqConnectins_1.channel === null || rMqConnectins_1.channel === void 0 ? void 0 : rMqConnectins_1.channel.ack(message);
+                    console.log(`Acknowledged message: ${JSON.stringify(msgContent)}`);
+                }
+                catch (error) {
+                    console.error(`Error processing message: ${error.message}`);
+                    rMqConnectins_1.channel === null || rMqConnectins_1.channel === void 0 ? void 0 : rMqConnectins_1.channel.nack(message, false, false); // Negative acknowledge the message without requeuing it
+                }
             }
-        }, { noAck: false });
+        }), { noAck: false });
     }
     else {
         console.error("RabbitMQ channel is not initialized");

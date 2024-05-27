@@ -11,4 +11,13 @@ export const signupRepository: IUserRepository = {
       throw new Error("failed to create user in database");
     }
   },
+  async findByEmail(email: string): Promise<IUser | null> {
+    // Implement this method
+    try {
+      const user = await User.findOne({ email }).lean();
+      return user;
+    } catch (error) {
+      throw new Error("failed to find user by email in database");
+    }
+  },
 };

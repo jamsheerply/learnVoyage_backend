@@ -26,4 +26,16 @@ exports.signupRepository = {
             }
         });
     },
+    findByEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Implement this method
+            try {
+                const user = yield userModel_1.default.findOne({ email }).lean();
+                return user;
+            }
+            catch (error) {
+                throw new Error("failed to find user by email in database");
+            }
+        });
+    },
 };

@@ -12,12 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// src/server.ts
 const express_1 = __importDefault(require("express"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const dbConnections_1 = __importDefault(require("../infrastructure/database/dbConnections"));
+dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-app.use("/api", userRoutes_1.default);
+app.use((0, cookie_parser_1.default)());
+app.use("/api/users", userRoutes_1.default);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`server is runing on port ${PORT}`);
+    yield (0, dbConnections_1.default)();
+    console.log(`Server is running on port ${PORT}`);
 }));

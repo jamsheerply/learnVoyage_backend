@@ -8,17 +8,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signupController = void 0;
-const producer_1 = require("../../infrastructure/messaging/producer");
-const rMqConnectins_1 = require("../../infrastructure/messaging/rMqConnectins");
+const jwt_1 = __importDefault(require("../../infrastructure/security/jwt"));
+const UserRepository_1 = require("../../infrastructure/database/repositories/UserRepository");
+const bcrypt_1 = __importDefault(require("../../infrastructure/security/bcrypt"));
+const signupUseCase_1 = require("../../application/useCases/signupUseCase");
 const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName, email, password } = req.body;
-        yield (0, rMqConnectins_1.connectToRabbitMQ)();
-        yield (0, rMqConnectins_1.createQueue)("user-service");
-        yield (0, producer_1.sendMessageToQueue)("user-service", "addUser", JSON.stringify(req.body));
-        return res.status(201).json({ success: true, data: req.body });
+        const newUser = yield (0, signupUseCase_1.signupUseCase)(UserRepository_1.UserRepository, bcrypt_1.default)({
+            firstName,
+            lastName,
+            email,
+            password,
+        });
+        if (!newUser) {
+            return res
+                .status(500)
+                .json({ success: false, error: "Failed to sign up user" });
+        }
+        // Generate JWT token
+        const tokenService = (0, jwt_1.default)(process.env.JWT_SECRET);
+        const token = tokenService.generateToken(newUser);
+        // Set token in cookies
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+        });
+        return res.status(201).json({ success: true, data: newUser });
     }
     catch (error) {
         return res

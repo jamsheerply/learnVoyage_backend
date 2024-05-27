@@ -6,6 +6,12 @@ const BcryptHashingService: IHashingService = {
     const saltRounds = 10;
     return bcrypt.hash(password, saltRounds);
   },
+  compare: async (
+    password: string,
+    hashedPassword: string
+  ): Promise<boolean> => {
+    return bcrypt.compare(password, hashedPassword);
+  },
 };
 
 export default BcryptHashingService;

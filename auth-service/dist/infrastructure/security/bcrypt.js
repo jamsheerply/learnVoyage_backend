@@ -18,5 +18,8 @@ const BcryptHashingService = {
         const saltRounds = 10;
         return bcrypt_1.default.hash(password, saltRounds);
     }),
+    compare: (password, hashedPassword) => __awaiter(void 0, void 0, void 0, function* () {
+        return bcrypt_1.default.compare(password, hashedPassword);
+    }),
 };
 exports.default = BcryptHashingService;

@@ -7,6 +7,7 @@ import { signupUseCase } from "../../application/useCases/signupUseCase";
 export const signupController = async (req: Request, res: Response) => {
   try {
     const { firstName, lastName, email, password } = req.body;
+    // console.log(req.body);
     const newUser = await signupUseCase(
       UserRepository,
       BcryptHashingService
@@ -24,14 +25,15 @@ export const signupController = async (req: Request, res: Response) => {
     // Generate JWT token
     const tokenService = generateJwtTokenService(process.env.JWT_SECRET!);
     const token = tokenService.generateToken(newUser);
+    console.log(token);
 
     // Set token in cookies
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    // });
 
-    return res.status(201).json({ success: true, data: newUser });
+    return res.status(201).json({ success: true, data: token });
   } catch (error) {
     return res
       .status(500)

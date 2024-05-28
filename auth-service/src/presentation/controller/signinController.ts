@@ -8,6 +8,7 @@ import BcryptHashingService from "../../infrastructure/security/bcrypt";
 export const signinContoller = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+
     const user = await signinUseCase(
       UserRepository,
       BcryptHashingService
@@ -24,11 +25,12 @@ export const signinContoller = async (req: Request, res: Response) => {
     const tokenService = generateJwtTokenService(process.env.JWT_SECRET!);
     const token = tokenService.generateToken(user);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    });
-    return res.status(201).json({ success: true, data: user });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    // });
+    console.log(token);
+    return res.status(201).json({ success: true, data: token });
   } catch (error) {
     return res
       .status(500)

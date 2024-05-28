@@ -4,7 +4,8 @@ import {
   channel,
   connectToRabbitMQ,
   createQueue,
-} from "../../infrastructure/messaging/RMQConnectins";
+} from "../../infrastructure/messaging/RMQConnections";
+
 import { generateCorrelationId } from "../../infrastructure/utility/correlationId";
 
 export const signupService = async (userData: IUser) => {

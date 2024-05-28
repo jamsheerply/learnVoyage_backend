@@ -1,5 +1,5 @@
 import { ConsumeMessage } from "amqplib";
-import { channel } from "./RMQConnectins";
+import { channel } from "./RMQConnections";
 import { handleConsumer } from "./handleConsumer";
 
 const consumeMessages = async (queueName: string): Promise<void> => {

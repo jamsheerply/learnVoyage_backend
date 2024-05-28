@@ -1,4 +1,4 @@
-import { channel } from "./RMQConnectins";
+import { channel } from "./RMQConnections";
 
 const sendMessageToQueue = async (
   queueName: string,

@@ -10,12 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendMessageToQueue = void 0;
-const RMQConnectins_1 = require("./RMQConnectins");
+const RMQConnections_1 = require("./RMQConnections");
 const sendMessageToQueue = (queueName_1, msgType_1, message_1, ...args_1) => __awaiter(void 0, [queueName_1, msgType_1, message_1, ...args_1], void 0, function* (queueName, msgType, message, options = {}) {
     try {
-        if (RMQConnectins_1.channel) {
+        if (RMQConnections_1.channel) {
             const msgContent = JSON.stringify({ type: msgType, payload: message });
-            yield RMQConnectins_1.channel.sendToQueue(queueName, Buffer.from(msgContent), options);
+            yield RMQConnections_1.channel.sendToQueue(queueName, Buffer.from(msgContent), options);
             console.log(`Sent message to queue ${queueName}: ${msgContent}`);
         }
         else {

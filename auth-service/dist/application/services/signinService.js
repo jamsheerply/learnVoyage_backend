@@ -10,20 +10,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signinService = void 0;
-const RMQConnectins_1 = require("../../infrastructure/messaging/RMQConnectins");
 const correlationId_1 = require("../../infrastructure/utility/correlationId");
 const producer_1 = require("../../infrastructure/messaging/producer");
+const RMQConnections_1 = require("../../infrastructure/messaging/RMQConnections");
 const signinService = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, RMQConnectins_1.connectToRabbitMQ)();
-    yield (0, RMQConnectins_1.createQueue)("user-service");
+    yield (0, RMQConnections_1.connectToRabbitMQ)();
+    yield (0, RMQConnections_1.createQueue)("user-service");
     const correlationId = (0, correlationId_1.generateCorrelationId)();
-    const replyQueue = yield (0, RMQConnectins_1.createQueue)("", { exclusive: true });
+    const replyQueue = yield (0, RMQConnections_1.createQueue)("", { exclusive: true });
     // Listen for response messages
     const response = yield new Promise((resolve, reject) => {
-        RMQConnectins_1.channel === null || RMQConnectins_1.channel === void 0 ? void 0 : RMQConnectins_1.channel.consume(replyQueue.queue, (message) => {
+        RMQConnections_1.channel === null || RMQConnections_1.channel === void 0 ? void 0 : RMQConnections_1.channel.consume(replyQueue.queue, (message) => {
             if ((message === null || message === void 0 ? void 0 : message.properties.correlationId) === correlationId) {
                 const msgContent = JSON.parse(message.content.toString());
-                RMQConnectins_1.channel === null || RMQConnectins_1.channel === void 0 ? void 0 : RMQConnectins_1.channel.ack(message);
+                RMQConnections_1.channel === null || RMQConnections_1.channel === void 0 ? void 0 : RMQConnections_1.channel.ack(message);
                 resolve(msgContent);
             }
         }, { noAck: false });

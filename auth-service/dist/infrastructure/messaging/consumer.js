@@ -10,18 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consumeMessages = void 0;
-const RMQConnectins_1 = require("./RMQConnectins");
+const RMQConnections_1 = require("./RMQConnections");
 const handleConsumer_1 = require("./handleConsumer");
 const consumeMessages = (queueName) => __awaiter(void 0, void 0, void 0, function* () {
-    if (RMQConnectins_1.channel) {
-        yield RMQConnectins_1.channel.assertQueue(queueName, { durable: true });
+    if (RMQConnections_1.channel) {
+        yield RMQConnections_1.channel.assertQueue(queueName, { durable: true });
         console.log(`Waiting for messages in queue: ${queueName}...`);
-        RMQConnectins_1.channel.consume(queueName, (message) => {
+        RMQConnections_1.channel.consume(queueName, (message) => {
             if (message) {
                 const msgContent = JSON.parse(message.content.toString());
                 console.log(`Received message: ${JSON.stringify(msgContent)}`);
                 (0, handleConsumer_1.handleConsumer)(msgContent.type, msgContent.payload);
-                RMQConnectins_1.channel === null || RMQConnectins_1.channel === void 0 ? void 0 : RMQConnectins_1.channel.ack(message);
+                RMQConnections_1.channel === null || RMQConnections_1.channel === void 0 ? void 0 : RMQConnections_1.channel.ack(message);
                 console.log(`Acknowledged message: ${JSON.stringify(msgContent)}`);
             }
         }, { noAck: false });

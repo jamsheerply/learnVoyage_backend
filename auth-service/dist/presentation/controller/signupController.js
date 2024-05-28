@@ -20,6 +20,7 @@ const signupUseCase_1 = require("../../application/useCases/signupUseCase");
 const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName, email, password } = req.body;
+        // console.log(req.body);
         const newUser = yield (0, signupUseCase_1.signupUseCase)(UserRepository_1.UserRepository, bcrypt_1.default)({
             firstName,
             lastName,
@@ -34,12 +35,13 @@ const signupController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         // Generate JWT token
         const tokenService = (0, jwt_1.default)(process.env.JWT_SECRET);
         const token = tokenService.generateToken(newUser);
+        console.log(token);
         // Set token in cookies
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-        });
-        return res.status(201).json({ success: true, data: newUser });
+        // res.cookie("token", token, {
+        //   httpOnly: true,
+        //   secure: process.env.NODE_ENV === "production",
+        // });
+        return res.status(201).json({ success: true, data: token });
     }
     catch (error) {
         return res

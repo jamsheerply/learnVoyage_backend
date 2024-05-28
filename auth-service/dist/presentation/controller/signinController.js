@@ -32,11 +32,12 @@ const signinContoller = (req, res) => __awaiter(void 0, void 0, void 0, function
         //Generate JWT token
         const tokenService = (0, jwt_1.default)(process.env.JWT_SECRET);
         const token = tokenService.generateToken(user);
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-        });
-        return res.status(201).json({ success: true, data: user });
+        // res.cookie("token", token, {
+        //   httpOnly: true,
+        //   secure: process.env.NODE_ENV === "production",
+        // });
+        console.log(token);
+        return res.status(201).json({ success: true, data: token });
     }
     catch (error) {
         return res

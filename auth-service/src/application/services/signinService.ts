@@ -1,11 +1,11 @@
+import { generateCorrelationId } from "../../infrastructure/utility/correlationId";
+import { sendMessageToQueue } from "../../infrastructure/messaging/producer";
+import { IUser } from "../../domain/entities/user.entity";
 import {
   channel,
   connectToRabbitMQ,
   createQueue,
-} from "../../infrastructure/messaging/RMQConnectins";
-import { generateCorrelationId } from "../../infrastructure/utility/correlationId";
-import { sendMessageToQueue } from "../../infrastructure/messaging/producer";
-import { IUser } from "../../domain/entities/user.entity";
+} from "../../infrastructure/messaging/RMQConnections";
 
 export const signinService = async (userData: {
   email: string;

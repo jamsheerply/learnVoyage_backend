@@ -15,11 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const mongoose_1 = __importDefault(require("mongoose"));
-const MONGODB_URI = `mongodb+srv://learnvoyage:learnvoyage123@learnvoyage.a3qrwmv.mongodb.net/auth-service?retryWrites=true&w=majority&appName=LearnVoyage`;
+const MONGODB_URI = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@learnvoyage.a3qrwmv.mongodb.net/auth-service?retryWrites=true&w=majority&appName=LearnVoyage`;
 exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(MONGODB_URI);
-        console.log("🍃🍃🍃 Service connected to the database 🍃🍃🍃");
+        console.log("🍃🍃🍃 Auth-Service connected to the database 🍃🍃🍃");
     }
     catch (error) {
         console.log("⛔⛔⛔ Failed to connect to the database ⛔⛔⛔");

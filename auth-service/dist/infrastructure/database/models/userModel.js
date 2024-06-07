@@ -1,4 +1,6 @@
 "use strict";
+// import mongoose, { Schema } from "mongoose";
+// import { IUser } from "../../../domain/entities/user.entity";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -23,12 +25,105 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// const userSchema: Schema = new Schema({
+//   firstName: { type: String },
+//   lastName: { type: String },
+//   email: { type: String },
+//   password: { type: String },
+//   role: {
+//     type: String,
+//     enum: ["student", "instructor", "admin"],
+//     default: "student",
+//   },
+//   profile: {
+//     avatar: {
+//       type: String,
+//     },
+//     dob: {
+//       type: String,
+//     },
+//     gender: {
+//       type: String,
+//       enum: ["male", "female", "other"],
+//     },
+//   },
+//   contact: {
+//     additionalEmail: {
+//       type: String,
+//     },
+//     phone: {
+//       type: String,
+//     },
+//     socialMedia: {
+//       instagram: String,
+//       linkedIn: String,
+//       github: String,
+//     },
+//   },
+//   isBlocked: {
+//     type: Boolean,
+//     default: false,
+//   },
+//   isVerified: {
+//     type: Boolean,
+//     default: false,
+//   },
+//   profession: {
+//     type: String,
+//   },
+//   otp: {
+//     type: String,
+//   },
+//   profit: {
+//     type: Number,
+//     default: 0,
+//   },
+// });
+// const User = mongoose.model<IUser & mongoose.Document>("User", userSchema);
+// export default User;
+// src/infrastructure/database/models/userModel.ts
 const mongoose_1 = __importStar(require("mongoose"));
 const userSchema = new mongoose_1.Schema({
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String },
     password: { type: String },
+    role: {
+        type: String,
+        enum: ["student", "instructor", "admin"],
+        default: "student",
+    },
+    profile: {
+        avatar: { type: String },
+        dob: { type: String },
+        gender: {
+            type: String,
+            enum: ["male", "female", "other"],
+        },
+    },
+    contact: {
+        additionalEmail: { type: String },
+        phone: { type: String },
+        socialMedia: {
+            instagram: String,
+            linkedIn: String,
+            github: String,
+        },
+    },
+    isBlocked: {
+        type: Boolean,
+        default: false,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    profession: { type: String },
+    otp: { type: String },
+    profit: {
+        type: Number,
+        default: 0,
+    },
 });
-const User = mongoose_1.default.model("User", userSchema);
-exports.default = User;
+const UserModel = mongoose_1.default.model("User", userSchema);
+exports.default = UserModel;

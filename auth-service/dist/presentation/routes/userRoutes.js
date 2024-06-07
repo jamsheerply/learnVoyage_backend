@@ -1,9 +1,21 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const signupController_1 = require("../controller/signupController");
 const signinController_1 = require("../controller/signinController");
+const signupController_1 = require("../controller/signupController");
+const getAllInstructorsController_1 = require("../controller/getAllInstructorsController");
+const editInstructorController_1 = require("../controller/editInstructorController");
+const authMiddleware_1 = __importDefault(require("../middlewares/authMiddleware"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const roleMiddleware_1 = __importDefault(require("../middlewares/roleMiddleware"));
+dotenv_1.default.config();
 const router = (0, express_1.Router)();
 router.post("/signup", signupController_1.signupController);
-router.post("/signin", signinController_1.signinContoller);
+router.post("/verify-otp", signupController_1.verifyOtpController);
+router.post("/signin", signinController_1.signinController);
+router.get("/instructors", (0, authMiddleware_1.default)(process.env.JWT_SECRET || ""), (0, roleMiddleware_1.default)("admin"), getAllInstructorsController_1.getAllInstructorsController);
+router.patch("/instructor/edit", (0, authMiddleware_1.default)(process.env.JWT_SECRET || ""), (0, roleMiddleware_1.default)("admin"), editInstructorController_1.editInstructorController);
 exports.default = router;

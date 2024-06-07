@@ -1,22 +1,35 @@
-// src/infrastructure/utility/generateJwtTokenService.ts
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
+import jwt, { verify } from "jsonwebtoken";
 import { IUser } from "../../domain/entities/user.entity";
-import { ITokenService } from "../../domain/interfaces/services/ITokenService";
 
-const generateJwtTokenService = (secretKey: string): ITokenService => {
-  const generateToken = (user: IUser): string => {
-    const userId = user._id.toHexString();
-    return jwt.sign(
-      { userId, name: user.firstName, email: user.email },
-      secretKey,
-      { expiresIn: "1h" }
-    );
-  };
+const generateJwtTokenService = (secret: string) => {
   return {
-    generateToken,
+    generateToken: (user: IUser) => {
+      return jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          isVerified: user.isVerified,
+        },
+        secret,
+        {
+          expiresIn: "24h",
+        }
+      );
+    },
   };
 };
 
-export default generateJwtTokenService;
+const verifyJwtTokenService = (secret: string) => {
+  return {
+    verifyToken: (token: string) => {
+      try {
+        return jwt.verify(token, secret);
+      } catch (error) {
+        throw new Error("Token verification failed");
+      }
+    },
+  };
+};
+
+export { generateJwtTokenService, verifyJwtTokenService };

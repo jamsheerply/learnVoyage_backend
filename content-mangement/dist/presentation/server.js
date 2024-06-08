@@ -16,19 +16,20 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
-const notificationRoutes_1 = __importDefault(require("../presentation/routes/notificationRoutes"));
-const RMQConnections_1 = require("../infrastructure/messaging/RMQConnections");
-const consumer_1 = require("../infrastructure/messaging/consumer");
+const dbConnections_1 = __importDefault(require("../infrastructure/database/dbConnections"));
+const categoriesRoute_1 = __importDefault(require("./routes/categoriesRoute"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)());
-app.use("/api", notificationRoutes_1.default);
-const PORT = process.env.PORT || 3003;
+app.use((0, cors_1.default)({
+    origin: "http://localhost:5173",
+    credentials: true,
+    optionsSuccessStatus: 200,
+}));
+app.use("/category", categoriesRoute_1.default);
+const PORT = process.env.PORT || 3004;
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`notification-server is running on port ${PORT}`);
-    yield (0, RMQConnections_1.connectToRabbitMQ)();
-    // await createQueue("notification-service");
-    (0, consumer_1.consumeMessages)("notification-service");
+    console.log(`content-management is runing on port ${PORT}`);
+    yield (0, dbConnections_1.default)();
 }));

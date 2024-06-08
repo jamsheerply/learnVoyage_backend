@@ -21,7 +21,7 @@ app.use("/api", notificationRoute);
 const PORT = process.env.PORT || 3003;
 
 app.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`notification-server is running on port ${PORT}`);
   await connectToRabbitMQ();
   // await createQueue("notification-service");
   consumeMessages("notification-service");

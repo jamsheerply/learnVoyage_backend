@@ -12,23 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const cors_1 = __importDefault(require("cors"));
-const notificationRoutes_1 = __importDefault(require("../presentation/routes/notificationRoutes"));
-const RMQConnections_1 = require("../infrastructure/messaging/RMQConnections");
-const consumer_1 = require("../infrastructure/messaging/consumer");
 dotenv_1.default.config();
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)());
-app.use("/api", notificationRoutes_1.default);
-const PORT = process.env.PORT || 3003;
-app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`notification-server is running on port ${PORT}`);
-    yield (0, RMQConnections_1.connectToRabbitMQ)();
-    // await createQueue("notification-service");
-    (0, consumer_1.consumeMessages)("notification-service");
-}));
+const mongoose_1 = __importDefault(require("mongoose"));
+const MONGODB_URI = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@learnvoyage.a3qrwmv.mongodb.net/content-management?retryWrites=true&w=majority&appName=LearnVoyage`;
+exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield mongoose_1.default.connect(MONGODB_URI);
+        console.log("🍃🍃🍃 content-management connected to the database 🍃🍃🍃");
+    }
+    catch (error) {
+        console.log("⛔⛔⛔ Failed to connect to the database ⛔⛔⛔");
+        console.error(error);
+        process.exit(1);
+    }
+});

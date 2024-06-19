@@ -21,7 +21,6 @@ const verifyOtpUseCase_1 = require("../../application/useCases/verifyOtpUseCase"
 const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName, email, password, role } = req.body;
-        console.log(req.body);
         // Create a new user object that matches the IUser interface
         const newUser = {
             id: "",
@@ -81,7 +80,6 @@ exports.signupController = signupController;
 const verifyOtpController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, otp } = req.body;
-        console.log(req.body);
         const isVerified = yield (0, verifyOtpUseCase_1.verifyOtpUseCase)(UserRepositoryImpl_1.UserRepository)(userId, otp);
         if (!isVerified) {
             return res.status(400).json({ success: false, error: "Invalid OTP" });

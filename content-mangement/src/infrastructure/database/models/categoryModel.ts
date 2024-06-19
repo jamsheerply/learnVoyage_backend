@@ -5,7 +5,7 @@ import { ICategory } from "../../../domain/entities/category.entity";
 const categorySchema: Schema = new Schema({
   categoryName: { type: String, required: true },
   isBlocked: { type: Boolean, default: false },
-  image: { type: String, required: true },
+  image: { type: String },
 });
 
 // Create and export the Mongoose model

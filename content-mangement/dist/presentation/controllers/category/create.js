@@ -24,6 +24,7 @@ const createCategoryController = (req, res) => __awaiter(void 0, void 0, void 0,
             image,
         };
         const createdCategory = yield (0, createCategoryUseCase_1.createCategoryUseCase)(CategoryRepositoryImpl_ts_1.CategoryRepository)(newCategory);
+        console.log(createdCategory);
         if (!createdCategory) {
             // If category creation fails, send a 500 error response
             return res

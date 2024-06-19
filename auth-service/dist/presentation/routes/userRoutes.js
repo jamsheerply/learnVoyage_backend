@@ -11,11 +11,15 @@ const editInstructorController_1 = require("../controller/editInstructorControll
 const authMiddleware_1 = __importDefault(require("../middlewares/authMiddleware"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const roleMiddleware_1 = __importDefault(require("../middlewares/roleMiddleware"));
+const resendOtpController_1 = require("../controller/resendOtpController");
+const isBlockedController_1 = require("../controller/isBlockedController");
 dotenv_1.default.config();
 const router = (0, express_1.Router)();
 router.post("/signup", signupController_1.signupController);
+router.post("/resend-otp", resendOtpController_1.resendOtpController);
 router.post("/verify-otp", signupController_1.verifyOtpController);
 router.post("/signin", signinController_1.signinController);
+router.get("/isBlocked/:id", isBlockedController_1.isBlockedController);
 router.get("/instructors", (0, authMiddleware_1.default)(process.env.JWT_SECRET || ""), (0, roleMiddleware_1.default)("admin"), getAllInstructorsController_1.getAllInstructorsController);
 router.patch("/instructor/edit", (0, authMiddleware_1.default)(process.env.JWT_SECRET || ""), (0, roleMiddleware_1.default)("admin"), editInstructorController_1.editInstructorController);
 exports.default = router;

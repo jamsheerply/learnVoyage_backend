@@ -13,6 +13,13 @@ exports.updateCategoryUseCase = void 0;
 const updateCategoryUseCase = (categoryRepository) => {
     return (categoryData) => __awaiter(void 0, void 0, void 0, function* () {
         const existingCategory = yield categoryRepository.readByIdCategory(categoryData.id);
+        // Check if the category name already exists in another category
+        if (categoryData.categoryName) {
+            const categoryByName = yield categoryRepository.readByNameCategory(categoryData.categoryName);
+            if (categoryByName && categoryByName.id !== categoryData.id) {
+                throw new Error("Category name already exists");
+            }
+        }
         if (!existingCategory) {
             throw new Error("Category not found");
         }

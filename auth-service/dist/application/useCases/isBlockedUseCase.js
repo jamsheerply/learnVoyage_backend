@@ -1,8 +1,4 @@
 "use strict";
-// // src/application/usecases/signinService.ts
-// import { IUserRepository } from '../../domain/interfaces/repositories/IUserRepository';
-// import { IHashingService } from '../../domain/interfaces/services/IHashingService';
-// import { IUser } from '../../domain/entities/user.entity';
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,18 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signinUseCase = void 0;
-const signinUseCase = (userRepository, hashingService) => {
-    return (userData) => __awaiter(void 0, void 0, void 0, function* () {
-        const user = yield userRepository.getUserByEmail(userData.email);
+exports.isBlockedUseCase = void 0;
+const isBlockedUseCase = (userRepository) => {
+    return (id) => __awaiter(void 0, void 0, void 0, function* () {
+        const user = yield userRepository.getUserById(id);
         if (!user) {
             throw new Error("User not found");
         }
-        const isPasswordValid = yield hashingService.compare(userData.password, user.password);
-        if (!isPasswordValid) {
-            throw new Error("Invalid user credential");
-        }
-        return user;
+        return user.isBlocked;
     });
 };
-exports.signinUseCase = signinUseCase;
+exports.isBlockedUseCase = isBlockedUseCase;

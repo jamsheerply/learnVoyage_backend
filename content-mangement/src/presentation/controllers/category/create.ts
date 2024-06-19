@@ -18,7 +18,7 @@ export const createCategoryController = async (req: Request, res: Response) => {
     const createdCategory = await createCategoryUseCase(CategoryRepository)(
       newCategory
     );
-
+    console.log(createdCategory);
     if (!createdCategory) {
       // If category creation fails, send a 500 error response
       return res

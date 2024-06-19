@@ -28,7 +28,7 @@ const mongoose_1 = __importStar(require("mongoose"));
 const categorySchema = new mongoose_1.Schema({
     categoryName: { type: String, required: true },
     isBlocked: { type: Boolean, default: false },
-    image: { type: String, required: true },
+    image: { type: String },
 });
 // Create and export the Mongoose model
 const CategoryModel = mongoose_1.default.model("Category", categorySchema);

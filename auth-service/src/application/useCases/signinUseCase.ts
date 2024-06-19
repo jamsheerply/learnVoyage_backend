@@ -42,7 +42,7 @@ export const signinUseCase = (
       user.password
     );
     if (!isPasswordValid) {
-      throw new Error("Invalid password");
+      throw new Error("Invalid user credential");
     }
 
     return user;

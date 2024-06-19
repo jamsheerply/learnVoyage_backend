@@ -9,7 +9,7 @@ import { IUser } from "../../domain/entities/user.entity";
 export const signupController = async (req: Request, res: Response) => {
   try {
     const { firstName, lastName, email, password, role } = req.body;
-    console.log(req.body);
+
     // Create a new user object that matches the IUser interface
     const newUser: IUser = {
       id: "",
@@ -76,7 +76,7 @@ export const signupController = async (req: Request, res: Response) => {
 export const verifyOtpController = async (req: Request, res: Response) => {
   try {
     const { userId, otp } = req.body;
-    console.log(req.body);
+
     const isVerified = await verifyOtpUseCase(UserRepository)(userId, otp);
 
     if (!isVerified) {

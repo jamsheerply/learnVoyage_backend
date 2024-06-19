@@ -9,5 +9,5 @@ const router = Router();
 router.post("/create", createCategoryController);
 router.get("/read", readAllCategoryController);
 router.get("/read/:id", readByIdCategoryController);
-router.patch("/update",updateCategoryController)
+router.patch("/update", updateCategoryController);
 export default router;

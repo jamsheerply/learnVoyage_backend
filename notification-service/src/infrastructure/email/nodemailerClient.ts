@@ -19,6 +19,7 @@ export const createNodemailerClient = (): EmailClient => {
   });
 
   const send = async (notification: Notification): Promise<void> => {
+    console.log(notification);
     const mailOptions = {
       from: process.env.EMAIL,
       to: notification.recipientEmail,
@@ -27,7 +28,7 @@ export const createNodemailerClient = (): EmailClient => {
     };
     await transporter.sendMail(mailOptions);
   };
-
+  console.log(JSON.stringify(send));
   return { send };
 };
 

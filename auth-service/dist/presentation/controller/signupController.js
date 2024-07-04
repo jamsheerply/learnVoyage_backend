@@ -13,7 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyOtpController = exports.signupController = void 0;
-const jwt_1 = require("../../infrastructure/security/jwt");
+const generateAccessTokenService_1 = require("../../infrastructure/security/jwt/generateAccessTokenService");
+const generateRefreshTokenService_1 = require("../../infrastructure/security/jwt/generateRefreshTokenService");
 const UserRepositoryImpl_1 = require("../../infrastructure/database/repositories/UserRepositoryImpl");
 const bcrypt_1 = __importDefault(require("../../infrastructure/security/bcrypt"));
 const signupUseCase_1 = require("../../application/useCases/signupUseCase");
@@ -21,7 +22,6 @@ const verifyOtpUseCase_1 = require("../../application/useCases/verifyOtpUseCase"
 const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName, email, password, role } = req.body;
-        // Create a new user object that matches the IUser interface
         const newUser = {
             id: "",
             firstName,
@@ -53,17 +53,26 @@ const signupController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         if (!createdUser) {
             return res
                 .status(500)
-                .json({ success: false, error: "Failed to sign up user !" });
+                .json({ success: false, error: "Failed to sign up user!" });
         }
-        // Generate JWT token
-        const tokenService = (0, jwt_1.generateJwtTokenService)(process.env.JWT_SECRET);
-        const token = tokenService.generateToken(createdUser);
-        console.log(token);
-        // Set token in cookies
-        res.cookie("token", token, {
+        const accessTokenService = (0, generateAccessTokenService_1.generateAccessTokenService)(process.env.ACCESS_TOKEN_PRIVATE_KEY);
+        const refreshTokenService = (0, generateRefreshTokenService_1.generateRefreshTokenService)(process.env.REFRESH_TOKEN_PRIVATE_KEY);
+        // req.user = createdUser; // Attach the created user to the request object
+        const accessToken = accessTokenService.generateToken(createdUser);
+        const refreshtoken = yield refreshTokenService.generateToken(createdUser);
+        res.cookie("accessToken", accessToken, {
             httpOnly: true,
+            maxAge: 14 * 60 * 1000,
+            sameSite: "strict",
+            secure: true,
         });
-        return res.status(201).json({ success: true, data: token });
+        res.cookie("refreshToken", refreshtoken, {
+            httpOnly: true,
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            sameSite: "strict",
+            secure: true,
+        });
+        return res.status(201).json({ success: true, data: accessToken });
     }
     catch (error) {
         if (error.message === "Email already exists") {
@@ -73,7 +82,7 @@ const signupController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         }
         return res
             .status(500)
-            .json({ success: false, error: "Failed to sign up user catch" });
+            .json({ success: false, error: "Failed to sign up user" });
     }
 });
 exports.signupController = signupController;
@@ -88,10 +97,23 @@ const verifyOtpController = (req, res) => __awaiter(void 0, void 0, void 0, func
         if (!user) {
             return res.status(500).json({ success: false, error: "User not found" });
         }
-        const tokenService = (0, jwt_1.generateJwtTokenService)(process.env.JWT_SECRET);
-        const token = tokenService.generateToken(user);
-        console.log(token);
-        return res.status(200).json({ success: true, data: token });
+        const accessTokenService = (0, generateAccessTokenService_1.generateAccessTokenService)(process.env.ACCESS_TOKEN_PRIVATE_KEY);
+        const refreshTokenService = (0, generateRefreshTokenService_1.generateRefreshTokenService)(process.env.REFRESH_TOKEN_PRIVATE_KEY);
+        const accessToken = accessTokenService.generateToken(user);
+        const refreshtoken = yield refreshTokenService.generateToken(user);
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            maxAge: 14 * 60 * 1000,
+            sameSite: "strict",
+            secure: true,
+        });
+        res.cookie("refreshToken", refreshtoken, {
+            httpOnly: true,
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            sameSite: "strict",
+            secure: true,
+        });
+        return res.status(200).json({ success: true, data: accessToken });
     }
     catch (error) {
         return res

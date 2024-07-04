@@ -1,16 +1,25 @@
 import { Request, Response } from "express";
-import { generateJwtTokenService } from "../../infrastructure/security/jwt";
+import { generateAccessTokenService } from "../../infrastructure/security/jwt/generateAccessTokenService";
+import { generateRefreshTokenService } from "../../infrastructure/security/jwt/generateRefreshTokenService";
 import { UserRepository } from "../../infrastructure/database/repositories/UserRepositoryImpl";
 import BcryptHashingService from "../../infrastructure/security/bcrypt";
 import { signupUseCase } from "../../application/useCases/signupUseCase";
 import { verifyOtpUseCase } from "../../application/useCases/verifyOtpUseCase";
 import { IUser } from "../../domain/entities/user.entity";
+import { TokenRepository } from "../../infrastructure/database/repositories/TokenRepository";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IUser;
+    }
+  }
+}
 
 export const signupController = async (req: Request, res: Response) => {
   try {
     const { firstName, lastName, email, password, role } = req.body;
 
-    // Create a new user object that matches the IUser interface
     const newUser: IUser = {
       id: "",
       firstName,
@@ -47,20 +56,36 @@ export const signupController = async (req: Request, res: Response) => {
     if (!createdUser) {
       return res
         .status(500)
-        .json({ success: false, error: "Failed to sign up user !" });
+        .json({ success: false, error: "Failed to sign up user!" });
     }
-    // Generate JWT token
-    const tokenService = generateJwtTokenService(process.env.JWT_SECRET!);
 
-    const token = tokenService.generateToken(createdUser);
-    console.log(token);
+    const accessTokenService = generateAccessTokenService(
+      process.env.ACCESS_TOKEN_PRIVATE_KEY!
+    );
+    const refreshTokenService = generateRefreshTokenService(
+      process.env.REFRESH_TOKEN_PRIVATE_KEY!
+    );
 
-    // Set token in cookies
-    res.cookie("token", token, {
+    // req.user = createdUser; // Attach the created user to the request object
+
+    const accessToken = accessTokenService.generateToken(createdUser);
+    const refreshtoken = await refreshTokenService.generateToken(createdUser);
+
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
+      maxAge: 14 * 60 * 1000,
+      sameSite: "strict",
+      secure: true,
     });
 
-    return res.status(201).json({ success: true, data: token });
+    res.cookie("refreshToken", refreshtoken, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+      secure: true,
+    });
+
+    return res.status(201).json({ success: true, data: accessToken });
   } catch (error: any) {
     if (error.message === "Email already exists") {
       return res
@@ -69,7 +94,7 @@ export const signupController = async (req: Request, res: Response) => {
     }
     return res
       .status(500)
-      .json({ success: false, error: "Failed to sign up user catch" });
+      .json({ success: false, error: "Failed to sign up user" });
   }
 };
 
@@ -88,11 +113,32 @@ export const verifyOtpController = async (req: Request, res: Response) => {
       return res.status(500).json({ success: false, error: "User not found" });
     }
 
-    const tokenService = generateJwtTokenService(process.env.JWT_SECRET!);
-    const token = tokenService.generateToken(user);
-    console.log(token);
-    return res.status(200).json({ success: true, data: token });
-  } catch (error) {
+    const accessTokenService = generateAccessTokenService(
+      process.env.ACCESS_TOKEN_PRIVATE_KEY!
+    );
+    const refreshTokenService = generateRefreshTokenService(
+      process.env.REFRESH_TOKEN_PRIVATE_KEY!
+    );
+
+    const accessToken = accessTokenService.generateToken(user);
+    const refreshtoken = await refreshTokenService.generateToken(user);
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      maxAge: 14 * 60 * 1000,
+      sameSite: "strict",
+      secure: true,
+    });
+
+    res.cookie("refreshToken", refreshtoken, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+      secure: true,
+    });
+
+    return res.status(200).json({ success: true, data: accessToken });
+  } catch (error: any) {
     return res
       .status(500)
       .json({ success: false, error: "Failed to verify OTP" });

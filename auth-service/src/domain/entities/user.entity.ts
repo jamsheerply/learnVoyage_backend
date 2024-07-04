@@ -1,13 +1,3 @@
-// export interface IUser {
-//   _id?: any;
-//   firstName?: string;
-//   lastName?: string;
-//   email: string;
-//   password: string;
-//   role?: string;
-// }
-
-// src/domain/entities/user.entity.ts
 export interface IUser {
   id: string;
   firstName: string;

@@ -18,6 +18,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const dbConnections_1 = __importDefault(require("../infrastructure/database/dbConnections"));
 const categoriesRoute_1 = __importDefault(require("./routes/categoriesRoute"));
+const couresRoute_1 = __importDefault(require("./routes/couresRoute"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -28,6 +29,7 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
 }));
 app.use("/category", categoriesRoute_1.default);
+app.use("/course", couresRoute_1.default);
 const PORT = process.env.PORT || 3004;
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`content-management is runing on port ${PORT}`);

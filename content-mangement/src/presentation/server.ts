@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dbConnections from "../infrastructure/database/dbConnections";
-import category from "./routes/categoriesRoute";
+import categoryRoute from "./routes/categoriesRoute";
+import courseRoute from "./routes/couresRoute";
 
 dotenv.config();
 
@@ -18,7 +19,8 @@ app.use(
   })
 );
 
-app.use("/category", category);
+app.use("/category", categoryRoute);
+app.use("/course", courseRoute);
 
 const PORT = process.env.PORT || 3004;
 

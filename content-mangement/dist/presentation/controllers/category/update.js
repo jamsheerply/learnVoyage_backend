@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateCategoryController = void 0;
-const updateCategoryUseCase_1 = require("../../../application/useCases/updateCategoryUseCase");
+const updateCategoryUseCase_1 = require("../../../application/useCases/category/updateCategoryUseCase");
 const CategoryRepositoryImpl_ts_1 = require("../../../infrastructure/database/repositories/category/CategoryRepositoryImpl.ts");
 const updateCategoryController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

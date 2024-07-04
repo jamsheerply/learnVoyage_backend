@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readAllCategoryController = void 0;
-const readAllCategoryUseCase_1 = require("../../../application/useCases/readAllCategoryUseCase");
+const readAllCategoryUseCase_1 = require("../../../application/useCases/category/readAllCategoryUseCase");
 const CategoryRepositoryImpl_ts_1 = require("../../../infrastructure/database/repositories/category/CategoryRepositoryImpl.ts");
 const readAllCategoryController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

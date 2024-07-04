@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { updateCategoryUseCase } from "../../../application/useCases/updateCategoryUseCase";
+import { updateCategoryUseCase } from "../../../application/useCases/category/updateCategoryUseCase";
 import { CategoryRepository } from "../../../infrastructure/database/repositories/category/CategoryRepositoryImpl.ts";
 
 export const updateCategoryController = async (req: Request, res: Response) => {

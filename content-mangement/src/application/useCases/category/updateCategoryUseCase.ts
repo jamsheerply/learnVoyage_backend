@@ -1,5 +1,5 @@
-import { ICategory } from "../../domain/entities/category.entity";
-import { ICategoryRepository } from "../../domain/interfaces/repositories/ICategoryRepositoty";
+import { ICategory } from "../../../domain/entities/category.entity";
+import { ICategoryRepository } from "../../../domain/interfaces/repositories/ICategoryRepositoty";
 
 export const updateCategoryUseCase = (
   categoryRepository: ICategoryRepository

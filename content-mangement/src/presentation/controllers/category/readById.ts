@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { readByIdCategoryUseCase } from "../../../application/useCases/readByIdCategoryUseCase";
+import { readByIdCategoryUseCase } from "../../../application/useCases/category/readByIdCategoryUseCase";
 import { CategoryRepository } from "../../../infrastructure/database/repositories/category/CategoryRepositoryImpl.ts";
 
 export const readByIdCategoryController = async (
@@ -12,8 +12,8 @@ export const readByIdCategoryController = async (
     const readByIdCategory = await readByIdCategoryUseCase(CategoryRepository)(
       id
     );
-    return res.status(200).json({ success: true, data: readByIdCategory }); // Fix typo in success
+    return res.status(200).json({ success: true, data: readByIdCategory });
   } catch (error: any) {
-    return res.status(500).json({ success: false, error: error.message }); // Fix typo in error response
+    return res.status(500).json({ success: false, error: error.message });
   }
 };

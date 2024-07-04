@@ -14,7 +14,7 @@ const UserRepositoryImpl_1 = require("../../infrastructure/database/repositories
 const editInstructorUseCase_1 = require("../../application/useCases/editInstructorUseCase");
 const editInstructorController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id, isBlocked } = req.body; // Ensure id and isBlocked are passed in the request body
+        const { id, isBlocked } = req.body;
         if (!id || typeof isBlocked !== "boolean") {
             return res
                 .status(400)

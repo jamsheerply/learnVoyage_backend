@@ -13,6 +13,7 @@ exports.handleNotification = void 0;
 const nodemailerClient_1 = require("../email/nodemailerClient");
 const uuid_1 = require("uuid");
 const handleNotification = (notificationData) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(notificationData);
     const notification = {
         id: (0, uuid_1.v4)(),
         recipientEmail: notificationData.email,

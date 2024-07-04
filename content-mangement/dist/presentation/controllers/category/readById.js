@@ -10,17 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readByIdCategoryController = void 0;
-const readByIdCategoryUseCase_1 = require("../../../application/useCases/readByIdCategoryUseCase");
+const readByIdCategoryUseCase_1 = require("../../../application/useCases/category/readByIdCategoryUseCase");
 const CategoryRepositoryImpl_ts_1 = require("../../../infrastructure/database/repositories/category/CategoryRepositoryImpl.ts");
 const readByIdCategoryController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         console.log(req.params);
         const readByIdCategory = yield (0, readByIdCategoryUseCase_1.readByIdCategoryUseCase)(CategoryRepositoryImpl_ts_1.CategoryRepository)(id);
-        return res.status(200).json({ success: true, data: readByIdCategory }); // Fix typo in success
+        return res.status(200).json({ success: true, data: readByIdCategory });
     }
     catch (error) {
-        return res.status(500).json({ success: false, error: error.message }); // Fix typo in error response
+        return res.status(500).json({ success: false, error: error.message });
     }
 });
 exports.readByIdCategoryController = readByIdCategoryController;

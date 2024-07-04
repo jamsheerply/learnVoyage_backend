@@ -51,6 +51,20 @@ dotenv_1.default.config();
 // };
 // export { connectToRabbitMQ, createQueue, channel };
 // src/infrastructure/messaging/RMQConnections.ts
+// import amqp from "amqplib";
+// let connection: amqp.Connection | null = null;
+// let channel: amqp.Channel | null = null;
+// export const connectToRabbitMQ = async () => {
+//   connection = await amqp.connect(process.env.RMQ_URL ?? "amqp://localhost");
+//   channel = await connection.createChannel();
+// };
+// export const createQueue = async (queue: string, options = {}) => {
+//   if (!channel) {
+//     throw new Error("Channel is not created. Call connectToRabbitMQ first.");
+//   }
+//   return channel.assertQueue(queue, options);
+// };
+// export { connection, channel };
 const amqplib_1 = __importDefault(require("amqplib"));
 let connection = null;
 exports.connection = connection;
@@ -58,8 +72,29 @@ let channel = null;
 exports.channel = channel;
 const connectToRabbitMQ = () => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    exports.connection = connection = yield amqplib_1.default.connect((_a = process.env.RMQ_URL) !== null && _a !== void 0 ? _a : "amqp://localhost");
-    exports.channel = channel = yield connection.createChannel();
+    try {
+        exports.connection = connection = yield amqplib_1.default.connect((_a = process.env.RMQ_URL) !== null && _a !== void 0 ? _a : "amqp://localhost");
+        connection.on("error", (err) => {
+            console.error("RabbitMQ connection error:", err);
+            exports.connection = connection = null;
+            exports.channel = channel = null;
+        });
+        connection.on("close", () => {
+            console.log("RabbitMQ connection closed. Attempting to reconnect...");
+            exports.connection = connection = null;
+            exports.channel = channel = null;
+            setTimeout(connectToRabbitMQ, 5000); // Retry after 5 seconds
+        });
+        exports.channel = channel = yield connection.createChannel();
+        channel.on("error", (err) => {
+            console.error("RabbitMQ channel error:", err);
+        });
+        console.log("Connected to RabbitMQ");
+    }
+    catch (error) {
+        console.error("Failed to connect to RabbitMQ:", error);
+        setTimeout(connectToRabbitMQ, 5000); // Retry after 5 seconds
+    }
 });
 exports.connectToRabbitMQ = connectToRabbitMQ;
 const createQueue = (queue_1, ...args_1) => __awaiter(void 0, [queue_1, ...args_1], void 0, function* (queue, options = {}) {

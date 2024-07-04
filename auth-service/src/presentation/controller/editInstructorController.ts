@@ -4,7 +4,7 @@ import { editInstructorUseCase } from "../../application/useCases/editInstructor
 
 export const editInstructorController = async (req: Request, res: Response) => {
   try {
-    const { id, isBlocked } = req.body; // Ensure id and isBlocked are passed in the request body
+    const { id, isBlocked } = req.body;
 
     if (!id || typeof isBlocked !== "boolean") {
       return res

@@ -19,6 +19,7 @@ app.use((0, cors_1.default)({
 }));
 app.use("/api/users", (0, express_http_proxy_1.default)("http://localhost:3001"));
 app.use("/api/content-management", (0, express_http_proxy_1.default)("http://localhost:3004"));
+app.use("/api/payment-service", (0, express_http_proxy_1.default)("http://localhost:3005"));
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });

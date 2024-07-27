@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ICategory } from "../../../domain/entities/category.entity";
 import { createCategoryUseCase } from "../../../application/useCases/category/createCategoryUseCase";
-import { CategoryRepository } from "../../../infrastructure/database/repositories/category/CategoryRepositoryImpl.ts";
+import { CategoryRepository } from "../../../infrastructure/database/repositories/CategoryRepositoryImpl.ts";
 
 // This is the controller function to handle the request and response for creating a category
 export const createCategoryController = async (req: Request, res: Response) => {

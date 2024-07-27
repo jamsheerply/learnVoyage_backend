@@ -26,7 +26,7 @@ const signupUseCase = (userRepository, hashingService) => {
             const newUser = yield userRepository.addUser(Object.assign(Object.assign({}, userData), { password: hashedPassword, isVerified: false, otp }));
             yield userRepository.updateOtp(newUser.id, otp);
             const correlationId = (0, correlationId_1.generateCorrelationId)();
-            yield (0, producer_1.sendMessageToQueue)("notification-service", JSON.stringify({
+            yield (0, producer_1.sendMessageToQueue)("notification-service-2", JSON.stringify({
                 email: newUser.email,
                 message: otp,
                 type: "otp",

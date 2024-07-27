@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signinController = void 0;
-const generateAccessTokenService_1 = require("../../infrastructure/security/jwt/generateAccessTokenService");
-const generateRefreshTokenService_1 = require("../../infrastructure/security/jwt/generateRefreshTokenService");
+const generateAccessToken_1 = require("../../infrastructure/security/jwt/generateAccessToken");
+const generateRefreshToken_1 = require("../../infrastructure/security/jwt/generateRefreshToken");
 const UserRepositoryImpl_1 = require("../../infrastructure/database/repositories/UserRepositoryImpl");
 const bcrypt_1 = __importDefault(require("../../infrastructure/security/bcrypt"));
 const signinUseCase_1 = require("../../application/useCases/signinUseCase");
@@ -37,17 +37,24 @@ const signinController = (req, res) => __awaiter(void 0, void 0, void 0, functio
                 .json({ success: false, error: "Please contact admin" });
         }
         // Generate access and refresh tokens
-        const accessTokenService = (0, generateAccessTokenService_1.generateAccessTokenService)(process.env.ACCESS_TOKEN_PRIVATE_KEY);
-        const refreshTokenService = (0, generateRefreshTokenService_1.generateRefreshTokenService)(process.env.REFRESH_TOKEN_PRIVATE_KEY);
-        // req.user = user;
-        const accessToken = accessTokenService.generateToken(user);
-        const refreshtoken = yield refreshTokenService.generateToken(user);
+        // const accessTokenService = generateAccessTokenService(
+        //   process.env.ACCESS_TOKEN_PRIVATE_KEY!
+        // );
+        // const refreshTokenService = generateRefreshTokenService(
+        //   process.env.REFRESH_TOKEN_PRIVATE_KEY!
+        // );
+        // const accessToken = accessTokenService.generateToken(user);
+        // const refreshtoken = await refreshTokenService.generateToken(user);
+        const accessToken = (0, generateAccessToken_1.generateAccessToken)(user);
+        const refreshToken = (0, generateRefreshToken_1.generateRefreshToken)(user);
+        console.log(accessToken);
+        console.log(refreshToken);
         // Set tokens in cookies
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             maxAge: 60 * 1000,
         }); // 14 minutes
-        res.cookie("refreshToken", refreshtoken, {
+        res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         });

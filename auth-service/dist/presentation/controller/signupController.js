@@ -13,12 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyOtpController = exports.signupController = void 0;
-const generateAccessTokenService_1 = require("../../infrastructure/security/jwt/generateAccessTokenService");
-const generateRefreshTokenService_1 = require("../../infrastructure/security/jwt/generateRefreshTokenService");
+const generateAccessToken_1 = require("../../infrastructure/security/jwt/generateAccessToken");
+const generateRefreshToken_1 = require("../../infrastructure/security/jwt/generateRefreshToken");
 const UserRepositoryImpl_1 = require("../../infrastructure/database/repositories/UserRepositoryImpl");
 const bcrypt_1 = __importDefault(require("../../infrastructure/security/bcrypt"));
 const signupUseCase_1 = require("../../application/useCases/signupUseCase");
 const verifyOtpUseCase_1 = require("../../application/useCases/verifyOtpUseCase");
+const producerRpc_1 = require("../../infrastructure/messaging/producerRpc");
 const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName, email, password, role } = req.body;
@@ -55,18 +56,17 @@ const signupController = (req, res) => __awaiter(void 0, void 0, void 0, functio
                 .status(500)
                 .json({ success: false, error: "Failed to sign up user!" });
         }
-        const accessTokenService = (0, generateAccessTokenService_1.generateAccessTokenService)(process.env.ACCESS_TOKEN_PRIVATE_KEY);
-        const refreshTokenService = (0, generateRefreshTokenService_1.generateRefreshTokenService)(process.env.REFRESH_TOKEN_PRIVATE_KEY);
-        // req.user = createdUser; // Attach the created user to the request object
-        const accessToken = accessTokenService.generateToken(createdUser);
-        const refreshtoken = yield refreshTokenService.generateToken(createdUser);
+        const accessToken = (0, generateAccessToken_1.generateAccessToken)(createdUser);
+        const refreshToken = (0, generateRefreshToken_1.generateRefreshToken)(createdUser);
+        console.log(accessToken);
+        console.log(refreshToken);
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             maxAge: 14 * 60 * 1000,
             sameSite: "strict",
             secure: true,
         });
-        res.cookie("refreshToken", refreshtoken, {
+        res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             maxAge: 30 * 24 * 60 * 60 * 1000,
             sameSite: "strict",
@@ -97,21 +97,35 @@ const verifyOtpController = (req, res) => __awaiter(void 0, void 0, void 0, func
         if (!user) {
             return res.status(500).json({ success: false, error: "User not found" });
         }
-        const accessTokenService = (0, generateAccessTokenService_1.generateAccessTokenService)(process.env.ACCESS_TOKEN_PRIVATE_KEY);
-        const refreshTokenService = (0, generateRefreshTokenService_1.generateRefreshTokenService)(process.env.REFRESH_TOKEN_PRIVATE_KEY);
-        const accessToken = accessTokenService.generateToken(user);
-        const refreshtoken = yield refreshTokenService.generateToken(user);
+        // const accessTokenService = generateAccessTokenService(
+        //   process.env.ACCESS_TOKEN_PRIVATE_KEY!
+        // );
+        // const refreshTokenService = generateRefreshTokenService(
+        //   process.env.REFRESH_TOKEN_PRIVATE_KEY!
+        // );
+        // const accessToken = accessTokenService.generateToken(user);
+        // const refreshtoken = await refreshTokenService.generateToken(user);
+        const accessToken = (0, generateAccessToken_1.generateAccessToken)(user);
+        const refreshToken = (0, generateRefreshToken_1.generateRefreshToken)(user);
+        console.log(accessToken);
+        console.log(refreshToken);
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             maxAge: 14 * 60 * 1000,
             sameSite: "strict",
             secure: true,
         });
-        res.cookie("refreshToken", refreshtoken, {
+        res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             maxAge: 30 * 24 * 60 * 60 * 1000,
             sameSite: "strict",
             secure: true,
+        });
+        // create-user in chat
+        (0, producerRpc_1.sendMessage)("chat-service", { type: "createUser", data: user }, (response) => {
+            // Specify the type of response as any or more specific type if known
+            console.log("Response from content-management-service:", response);
+            // Handle the response here
         });
         return res.status(200).json({ success: true, data: accessToken });
     }

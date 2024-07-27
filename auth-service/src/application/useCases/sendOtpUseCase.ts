@@ -15,7 +15,7 @@ export const sendOtpUseCase = (UserRepository: IUserRepository) => {
       const correlationId = generateCorrelationId();
 
       await sendMessageToQueue(
-        "notification-service",
+        "notification-service-2",
         JSON.stringify({
           email: email,
           message: otp,

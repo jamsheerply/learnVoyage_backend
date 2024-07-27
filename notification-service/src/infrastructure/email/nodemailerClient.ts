@@ -11,7 +11,7 @@ export interface EmailClient {
 
 export const createNodemailerClient = (): EmailClient => {
   const transporter = nodemailer.createTransport({
-    service: "Gmail",
+    service: "gmail",
     auth: {
       user: process.env.EMAIL,
       pass: process.env.PASS,

@@ -1,4 +1,5 @@
 import { IUser } from "../../entities/user.entity";
+import { userEntity } from "../../entities/userEntity";
 
 export interface IUserRepository {
   addUser(user: IUser): Promise<IUser>;
@@ -11,4 +12,6 @@ export interface IUserRepository {
   getUserById(userId: string): Promise<IUser | null>;
   getAllRole(role: string): Promise<IUser[]>;
   editInstructor(id: string, isBlocked: boolean): Promise<IUser[]>;
+  getProfileById(id: string): Promise<userEntity | null>;
+  updateProfile(userData: userEntity): Promise<userEntity | null>;
 }

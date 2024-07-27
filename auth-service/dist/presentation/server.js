@@ -18,6 +18,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const instructorRoutes_1 = __importDefault(require("./routes/instructorRoutes"));
 const dbConnections_1 = __importDefault(require("../infrastructure/database/dbConnections"));
 const RMQConnections_1 = require("../infrastructure/messaging/RMQConnections");
 dotenv_1.default.config();
@@ -29,8 +30,14 @@ app.use((0, cors_1.default)({
     credentials: true,
     optionsSuccessStatus: 200,
 }));
-app.use("/", userRoutes_1.default);
-const PORT = process.env.PORT || 3000;
+app.get("/", (req, res) => {
+    res.status(200).json({
+        message: `chat service ON! port:${PORT}`,
+    });
+});
+app.use("/auth", userRoutes_1.default);
+app.use("/instructor", instructorRoutes_1.default);
+const PORT = process.env.PORT;
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Server is running on port ${PORT}`);
     yield (0, RMQConnections_1.connectToRabbitMQ)();

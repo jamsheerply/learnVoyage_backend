@@ -8,6 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -19,14 +30,14 @@ exports.UserRepository = {
         const newUser = new userModel_1.default(user);
         yield newUser.save();
         const userObject = newUser.toObject();
-        userObject.id = userObject._id.toString(); // Map _id to id and convert to string
+        userObject.id = userObject._id.toString();
         return userObject;
     }),
     getUserByEmail: (email) => __awaiter(void 0, void 0, void 0, function* () {
         const user = yield userModel_1.default.findOne({ email });
         if (user) {
             const userObject = user.toObject();
-            userObject.id = userObject._id.toString(); // Map _id to id and convert to string
+            userObject.id = userObject._id.toString();
             return userObject;
         }
         return null;
@@ -35,7 +46,7 @@ exports.UserRepository = {
         const user = yield userModel_1.default.findById(userId);
         if (user) {
             const userObject = user.toObject();
-            userObject.id = userObject._id.toString(); // Map _id to id and convert to string
+            userObject.id = userObject._id.toString();
             return userObject;
         }
         return null;
@@ -50,7 +61,7 @@ exports.UserRepository = {
         const users = yield userModel_1.default.find({ role });
         return users.map((user) => {
             const userObject = user.toObject();
-            userObject.id = userObject._id.toString(); // Map _id to id and convert to string
+            userObject.id = userObject._id.toString();
             return userObject;
         });
     }),
@@ -62,5 +73,28 @@ exports.UserRepository = {
             userObject.id = userObject._id.toString();
             return userObject;
         });
+    }),
+    getProfileById: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const profileById = yield userModel_1.default.findById(id);
+            return profileById;
+        }
+        catch (error) {
+            const customError = error;
+            throw new Error(customError === null || customError === void 0 ? void 0 : customError.message);
+        }
+    }),
+    updateProfile: (userData) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { _id } = userData, rest = __rest(userData, ["_id"]);
+            // console.log("rest", rest);
+            const updatedProfile = yield userModel_1.default.findByIdAndUpdate(userData._id, rest, { new: true });
+            // console.log("repository", updatedProfile);
+            return updatedProfile;
+        }
+        catch (error) {
+            const customError = error;
+            throw new Error(customError === null || customError === void 0 ? void 0 : customError.message);
+        }
     }),
 };

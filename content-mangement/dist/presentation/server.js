@@ -18,20 +18,32 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const dbConnections_1 = __importDefault(require("../infrastructure/database/dbConnections"));
 const categoriesRoute_1 = __importDefault(require("./routes/categoriesRoute"));
-const couresRoute_1 = __importDefault(require("./routes/couresRoute"));
+const couresRoutes_1 = __importDefault(require("./routes/couresRoutes"));
+const enrollmentRoutes_1 = __importDefault(require("./routes/enrollmentRoutes"));
+const consumerRpc_1 = require("../infrastructure/messageBroker/consumerRpc");
+const verifyToken_1 = require("../infrastructure/jwt/verifyToken");
+const videoStreaming_1 = __importDefault(require("./controllers/streaming/videoStreaming"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
+app.get("/", verifyToken_1.jwtMiddleware, (req, res) => {
+    res.status(200).json({
+        message: `content Management service ON! port:${PORT}`,
+    });
+});
 app.use((0, cors_1.default)({
     origin: "http://localhost:5173",
     credentials: true,
     optionsSuccessStatus: 200,
 }));
 app.use("/category", categoriesRoute_1.default);
-app.use("/course", couresRoute_1.default);
+app.use("/course", couresRoutes_1.default);
+app.use("/enrollment", enrollmentRoutes_1.default);
+app.use("/videos", videoStreaming_1.default);
 const PORT = process.env.PORT || 3004;
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`content-management is runing on port ${PORT}`);
     yield (0, dbConnections_1.default)();
+    (0, consumerRpc_1.startConsumer)("content-management-service");
 }));

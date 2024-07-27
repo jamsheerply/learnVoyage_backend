@@ -2,6 +2,8 @@ import UserModel from "../models/userModel";
 import { IUser } from "../../../domain/entities/user.entity";
 import { IUserRepository } from "../../../domain/interfaces/repositories/IUserRepository";
 import { Document } from "mongoose";
+import { userEntity } from "../../../domain/entities/userEntity";
+import { CustomError } from "../../../_lib/common/customError";
 
 interface IUserWithId extends IUser, Document {
   _id: string;
@@ -13,14 +15,14 @@ export const UserRepository: IUserRepository = {
     const newUser = new UserModel(user);
     await newUser.save();
     const userObject = newUser.toObject() as IUserWithId;
-    userObject.id = userObject._id.toString(); // Map _id to id and convert to string
+    userObject.id = userObject._id.toString();
     return userObject;
   },
   getUserByEmail: async (email: string): Promise<IUser | null> => {
     const user = await UserModel.findOne({ email });
     if (user) {
       const userObject = user.toObject() as IUserWithId;
-      userObject.id = userObject._id.toString(); // Map _id to id and convert to string
+      userObject.id = userObject._id.toString();
       return userObject;
     }
     return null;
@@ -29,7 +31,7 @@ export const UserRepository: IUserRepository = {
     const user = await UserModel.findById(userId);
     if (user) {
       const userObject = user.toObject() as IUserWithId;
-      userObject.id = userObject._id.toString(); // Map _id to id and convert to string
+      userObject.id = userObject._id.toString();
       return userObject;
     }
     return null;
@@ -47,7 +49,7 @@ export const UserRepository: IUserRepository = {
     const users = await UserModel.find({ role });
     return users.map((user) => {
       const userObject = user.toObject() as IUserWithId;
-      userObject.id = userObject._id.toString(); // Map _id to id and convert to string
+      userObject.id = userObject._id.toString();
       return userObject;
     });
   },
@@ -59,5 +61,30 @@ export const UserRepository: IUserRepository = {
       userObject.id = userObject._id.toString();
       return userObject;
     });
+  },
+  getProfileById: async (id: string) => {
+    try {
+      const profileById = await UserModel.findById(id);
+      return profileById as userEntity;
+    } catch (error) {
+      const customError = error as CustomError;
+      throw new Error(customError?.message);
+    }
+  },
+  updateProfile: async (userData: userEntity) => {
+    try {
+      const { _id, ...rest } = userData;
+      // console.log("rest", rest);
+      const updatedProfile = await UserModel.findByIdAndUpdate(
+        userData._id,
+        rest,
+        { new: true }
+      );
+      // console.log("repository", updatedProfile);
+      return updatedProfile as userEntity;
+    } catch (error) {
+      const customError = error as CustomError;
+      throw new Error(customError?.message);
+    }
   },
 };

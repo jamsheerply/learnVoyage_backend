@@ -1,20 +1,13 @@
 import { Request, Response } from "express";
-import { generateAccessTokenService } from "../../infrastructure/security/jwt/generateAccessTokenService";
-import { generateRefreshTokenService } from "../../infrastructure/security/jwt/generateRefreshTokenService";
+import { generateAccessToken } from "../../infrastructure/security/jwt/generateAccessToken";
+import { generateRefreshToken } from "../../infrastructure/security/jwt/generateRefreshToken";
 import { UserRepository } from "../../infrastructure/database/repositories/UserRepositoryImpl";
 import BcryptHashingService from "../../infrastructure/security/bcrypt";
 import { signupUseCase } from "../../application/useCases/signupUseCase";
 import { verifyOtpUseCase } from "../../application/useCases/verifyOtpUseCase";
 import { IUser } from "../../domain/entities/user.entity";
 import { TokenRepository } from "../../infrastructure/database/repositories/TokenRepository";
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: IUser;
-    }
-  }
-}
+import { sendMessage } from "../../infrastructure/messaging/producerRpc";
 
 export const signupController = async (req: Request, res: Response) => {
   try {
@@ -59,17 +52,11 @@ export const signupController = async (req: Request, res: Response) => {
         .json({ success: false, error: "Failed to sign up user!" });
     }
 
-    const accessTokenService = generateAccessTokenService(
-      process.env.ACCESS_TOKEN_PRIVATE_KEY!
-    );
-    const refreshTokenService = generateRefreshTokenService(
-      process.env.REFRESH_TOKEN_PRIVATE_KEY!
-    );
+    const accessToken = generateAccessToken(createdUser);
+    const refreshToken = generateRefreshToken(createdUser);
 
-    // req.user = createdUser; // Attach the created user to the request object
-
-    const accessToken = accessTokenService.generateToken(createdUser);
-    const refreshtoken = await refreshTokenService.generateToken(createdUser);
+    console.log(accessToken);
+    console.log(refreshToken);
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
@@ -78,7 +65,7 @@ export const signupController = async (req: Request, res: Response) => {
       secure: true,
     });
 
-    res.cookie("refreshToken", refreshtoken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
       sameSite: "strict",
@@ -113,15 +100,21 @@ export const verifyOtpController = async (req: Request, res: Response) => {
       return res.status(500).json({ success: false, error: "User not found" });
     }
 
-    const accessTokenService = generateAccessTokenService(
-      process.env.ACCESS_TOKEN_PRIVATE_KEY!
-    );
-    const refreshTokenService = generateRefreshTokenService(
-      process.env.REFRESH_TOKEN_PRIVATE_KEY!
-    );
+    // const accessTokenService = generateAccessTokenService(
+    //   process.env.ACCESS_TOKEN_PRIVATE_KEY!
+    // );
+    // const refreshTokenService = generateRefreshTokenService(
+    //   process.env.REFRESH_TOKEN_PRIVATE_KEY!
+    // );
 
-    const accessToken = accessTokenService.generateToken(user);
-    const refreshtoken = await refreshTokenService.generateToken(user);
+    // const accessToken = accessTokenService.generateToken(user);
+    // const refreshtoken = await refreshTokenService.generateToken(user);
+
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    console.log(accessToken);
+    console.log(refreshToken);
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
@@ -130,12 +123,23 @@ export const verifyOtpController = async (req: Request, res: Response) => {
       secure: true,
     });
 
-    res.cookie("refreshToken", refreshtoken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
       sameSite: "strict",
       secure: true,
     });
+
+    // create-user in chat
+    sendMessage(
+      "chat-service",
+      { type: "createUser", data: user },
+      (response: any) => {
+        // Specify the type of response as any or more specific type if known
+        console.log("Response from content-management-service:", response);
+        // Handle the response here
+      }
+    );
 
     return res.status(200).json({ success: true, data: accessToken });
   } catch (error: any) {

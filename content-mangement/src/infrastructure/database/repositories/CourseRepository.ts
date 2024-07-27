@@ -27,7 +27,7 @@ export const CourseRepository: ICourseRepository = {
       instructor = [],
       price = [],
     } = queryData;
-    console.log(JSON.stringify(queryData));
+    // console.log(JSON.stringify(queryData));
     let query = CourseModel.find();
 
     // Unified Filter

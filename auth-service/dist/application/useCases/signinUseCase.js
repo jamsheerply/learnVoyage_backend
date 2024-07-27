@@ -1,8 +1,4 @@
 "use strict";
-// // src/application/usecases/signinService.ts
-// import { IUserRepository } from '../../domain/interfaces/repositories/IUserRepository';
-// import { IHashingService } from '../../domain/interfaces/services/IHashingService';
-// import { IUser } from '../../domain/entities/user.entity';
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -27,7 +23,7 @@ const signinUseCase = (userRepository, hashingService) => {
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
             yield userRepository.updateOtp(user.id, otp);
             const correlationId = (0, correlationId_1.generateCorrelationId)();
-            yield (0, producer_1.sendMessageToQueue)("notification-service", JSON.stringify({
+            yield (0, producer_1.sendMessageToQueue)("notification-service-2", JSON.stringify({
                 email: user.email,
                 message: otp,
                 type: "otp",

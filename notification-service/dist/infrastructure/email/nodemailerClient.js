@@ -19,7 +19,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const createNodemailerClient = () => {
     const transporter = nodemailer_1.default.createTransport({
-        service: "Gmail",
+        service: "gmail",
         auth: {
             user: process.env.EMAIL,
             pass: process.env.PASS,

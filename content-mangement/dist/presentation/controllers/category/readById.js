@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readByIdCategoryController = void 0;
 const readByIdCategoryUseCase_1 = require("../../../application/useCases/category/readByIdCategoryUseCase");
-const CategoryRepositoryImpl_ts_1 = require("../../../infrastructure/database/repositories/category/CategoryRepositoryImpl.ts");
+const CategoryRepositoryImpl_ts_1 = require("../../../infrastructure/database/repositories/CategoryRepositoryImpl.ts");
 const readByIdCategoryController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;

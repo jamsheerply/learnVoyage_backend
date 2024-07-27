@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCategoryController = void 0;
 const createCategoryUseCase_1 = require("../../../application/useCases/category/createCategoryUseCase");
-const CategoryRepositoryImpl_ts_1 = require("../../../infrastructure/database/repositories/category/CategoryRepositoryImpl.ts");
+const CategoryRepositoryImpl_ts_1 = require("../../../infrastructure/database/repositories/CategoryRepositoryImpl.ts");
 // This is the controller function to handle the request and response for creating a category
 const createCategoryController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

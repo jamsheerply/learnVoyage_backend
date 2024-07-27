@@ -1,11 +1,14 @@
 // src/server.ts
-import express from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes";
+import intructorRoutes from "./routes/instructorRoutes";
 import dbConnections from "../infrastructure/database/dbConnections";
 import { connectToRabbitMQ } from "../infrastructure/messaging/RMQConnections";
+import { startConsumer } from "../infrastructure/messaging/consumerRpc";
+import { sendMessage } from "../infrastructure/messaging/producerRpc";
 
 dotenv.config();
 
@@ -20,9 +23,16 @@ app.use(
   })
 );
 
-app.use("/", userRoutes);
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    message: `chat service ON! port:${PORT}`,
+  });
+});
 
-const PORT = process.env.PORT || 3000;
+app.use("/auth", userRoutes);
+app.use("/instructor", intructorRoutes);
+
+const PORT = process.env.PORT!;
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
   await connectToRabbitMQ();

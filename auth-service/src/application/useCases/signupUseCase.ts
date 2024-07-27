@@ -33,7 +33,7 @@ export const signupUseCase = (
       const correlationId = generateCorrelationId();
 
       await sendMessageToQueue(
-        "notification-service",
+        "notification-service-2",
         JSON.stringify({
           email: newUser.email,
           message: otp,

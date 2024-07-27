@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { readAllCategoryUseCase } from "../../../application/useCases/category/readAllCategoryUseCase";
-import { CategoryRepository } from "../../../infrastructure/database/repositories/category/CategoryRepositoryImpl.ts";
+import { CategoryRepository } from "../../../infrastructure/database/repositories/CategoryRepositoryImpl.ts";
 
 export const readAllCategoryController = async (
   req: Request,

@@ -23,6 +23,6 @@ const PORT = process.env.PORT || 3003;
 app.listen(PORT, async () => {
   console.log(`notification-server is running on port ${PORT}`);
   await connectToRabbitMQ();
-  // await createQueue("notification-service");
-  consumeMessages("notification-service");
+  // await createQueue("notification-service-2");
+  // consumeMessages("notification-service-2");
 });

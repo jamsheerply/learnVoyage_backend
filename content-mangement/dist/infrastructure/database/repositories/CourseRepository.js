@@ -24,7 +24,7 @@ exports.CourseRepository = {
     }),
     readAllCourses: (queryData) => __awaiter(void 0, void 0, void 0, function* () {
         const { page = 1, limit = 5, search = "", category = [], instructor = [], price = [], } = queryData;
-        console.log(JSON.stringify(queryData));
+        // console.log(JSON.stringify(queryData));
         let query = courseModel_1.default.find();
         // Unified Filter
         if (search) {

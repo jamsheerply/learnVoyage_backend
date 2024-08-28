@@ -14,6 +14,6 @@ export const generateAccessToken = (payload: UserPayload) => {
   const newPayload = { id, email, role, isVerified, firstName };
 
   return jwt.sign(newPayload, String(process.env.ACCESS_TOKEN_PRIVATE_KEY), {
-    expiresIn: "1s",
+    expiresIn: "1h",
   });
 };

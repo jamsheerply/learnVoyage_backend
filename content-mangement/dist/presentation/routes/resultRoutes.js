@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const verifyToken_1 = require("../../infrastructure/jwt/verifyToken");
+const create_1 = require("../controllers/result/create");
+const readByAssessmentId_1 = require("../controllers/result/readByAssessmentId");
+const read_1 = require("../controllers/result/read");
+const readExamPassRate_1 = require("../controllers/result/readExamPassRate");
+const router = (0, express_1.Router)();
+router.post("/create", verifyToken_1.jwtMiddleware, create_1.createResultController);
+router.get("/read/exam-pass-rate", verifyToken_1.jwtMiddleware, readExamPassRate_1.readResultExamPassRateController);
+router.get("/read/assessmentId/:assessmentId", verifyToken_1.jwtMiddleware, readByAssessmentId_1.readResultByAssessmentIdController);
+router.get("/read", verifyToken_1.jwtMiddleware, read_1.readResultController);
+exports.default = router;

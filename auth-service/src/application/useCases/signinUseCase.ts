@@ -1,9 +1,7 @@
-// src/application/usecases/signinService.ts
 import { IUserRepository } from "../../domain/interfaces/repositories/IUserRepository";
 import { IHashingService } from "../../domain/interfaces/services/IHashingService";
 import { IUser } from "../../domain/entities/user.entity";
-import { generateCorrelationId } from "../../infrastructure/utility/correlationId";
-import { sendMessageToQueue } from "../../infrastructure/messaging/producer";
+import { sendMessage } from "../../infrastructure/messageBroker/producerRpc";
 
 export const signinUseCase = (
   userRepository: IUserRepository,
@@ -18,22 +16,26 @@ export const signinUseCase = (
     if (!user) {
       throw new Error("User not found");
     }
-    console.log(user.isVerified);
-    if (user?.isVerified) {
+
+    if (!user?.isVerified) {
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
       await userRepository.updateOtp(user.id, otp);
 
-      const correlationId = generateCorrelationId();
+      const data = {
+        email: user.email,
+        message: otp,
+      };
 
-      await sendMessageToQueue(
-        "notification-service-2",
-        JSON.stringify({
-          email: user.email,
-          message: otp,
-          type: "otp",
-          correlationId,
-        })
+      // send-otp in user-service
+      sendMessage(
+        "notification-service",
+        { type: "sendOtp", data: data },
+        (response: any) => {
+          // Specify the type of response as any or more specific type if known
+          console.log("Response notification-service:", response);
+          // Handle the response here
+        }
       );
     }
 

@@ -25,7 +25,7 @@ const getEnrollmentByIdController = (req, res) => __awaiter(void 0, void 0, void
     }
     catch (error) {
         const customError = error;
-        console.error("Error fetching enrollment", error);
+        console.error("Error fetching getEnrollmentById", error);
         return res
             .status(500)
             .json({ success: false, error: customError === null || customError === void 0 ? void 0 : customError.message });

@@ -22,7 +22,6 @@ export const createPaymentController = (dependencies: IDependencies) => {
       if (
         !courseName ||
         !description ||
-        !coursePrice ||
         !courseThumbnailUrl ||
         !userId ||
         !_id
@@ -38,15 +37,17 @@ export const createPaymentController = (dependencies: IDependencies) => {
         amount: coursePrice,
       };
 
-      var result = await createPaymentUseCase(dependencies).execute(
+      const result = await createPaymentUseCase(dependencies).execute(
         paymentData
       );
 
       if (result) {
-        console.log(result);
         const stripe = new Stripe(process.env.STRIPE_SK!);
 
-        const unitAmountInCents = Math.max(Math.floor(coursePrice * 100), 50);
+        // Ensure coursePrice is properly handled
+        const unitAmountInCents = coursePrice
+          ? Math.max(Math.floor(coursePrice * 100), 50)
+          : 0;
 
         const lineItem: Stripe.Checkout.SessionCreateParams.LineItem = {
           price_data: {
@@ -72,13 +73,13 @@ export const createPaymentController = (dependencies: IDependencies) => {
         return res.status(200).json({
           success: true,
           id: session.id,
-          message: "payment created successfully",
+          message: "Payment created successfully",
         });
       } else {
-        throw new Error("payment created failed");
+        throw new Error("Payment creation failed");
       }
     } catch (error: any) {
-      console.log(error?.message);
+      console.error("Error creating payment:", error.message);
       next(error);
     }
   };

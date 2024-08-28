@@ -43,7 +43,7 @@ const readEnrollmentController = (req, res) => __awaiter(void 0, void 0, void 0,
     }
     catch (error) {
         const customError = error;
-        console.error("Error creating enrollment", error);
+        console.error("Error read enrollment", error);
         return res
             .status(500)
             .json({ success: false, error: customError === null || customError === void 0 ? void 0 : customError.message });

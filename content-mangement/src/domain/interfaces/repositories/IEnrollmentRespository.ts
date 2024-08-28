@@ -29,4 +29,13 @@ export interface IEnrollmentRepository {
     userId: string,
     courseId: string
   ): Promise<EnrollmentEntity | null>;
+  readCompleteCourse(
+    courseId: string
+  ): Promise<{ courseName: string; completedPercentage: number }[]>;
+  readEnrollmentActivity(
+    userId: string
+  ): Promise<{ date: Date; exam: string; enrollment: string } | null>;
+  readRecentEnrollment(userId: string): Promise<EnrollmentEntity[] | null>;
+  readTopCourses(): Promise<EnrollmentEntity[] | null>;
+  readCourseStatus(): Promise<EnrollmentEntity[] | null>;
 }

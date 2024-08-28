@@ -7,7 +7,7 @@ import { signupUseCase } from "../../application/useCases/signupUseCase";
 import { verifyOtpUseCase } from "../../application/useCases/verifyOtpUseCase";
 import { IUser } from "../../domain/entities/user.entity";
 import { TokenRepository } from "../../infrastructure/database/repositories/TokenRepository";
-import { sendMessage } from "../../infrastructure/messaging/producerRpc";
+import { sendMessage } from "../../infrastructure/messageBroker/producerRpc";
 
 export const signupController = async (req: Request, res: Response) => {
   try {
@@ -45,7 +45,7 @@ export const signupController = async (req: Request, res: Response) => {
       UserRepository,
       BcryptHashingService
     )(newUser);
-
+    console.log(createdUser);
     if (!createdUser) {
       return res
         .status(500)

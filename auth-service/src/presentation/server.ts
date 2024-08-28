@@ -6,9 +6,6 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes";
 import intructorRoutes from "./routes/instructorRoutes";
 import dbConnections from "../infrastructure/database/dbConnections";
-import { connectToRabbitMQ } from "../infrastructure/messaging/RMQConnections";
-import { startConsumer } from "../infrastructure/messaging/consumerRpc";
-import { sendMessage } from "../infrastructure/messaging/producerRpc";
 
 dotenv.config();
 
@@ -17,7 +14,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://learn-voyage-frontend.vercel.app",
+      "https://learn-voyage.jamsheerply.life",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -35,6 +36,5 @@ app.use("/instructor", intructorRoutes);
 const PORT = process.env.PORT!;
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
-  await connectToRabbitMQ();
   await dbConnections();
 });

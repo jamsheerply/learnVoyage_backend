@@ -1,19 +1,29 @@
+import { Types } from "mongoose";
+
 export interface ILessonContent {
   lessonNumber: string;
   lessonTitle: string;
   description: string;
-  videoUrl: string;
+  video: {
+    publicId: string;
+    version: string;
+  };
 }
 
 export interface ICourse {
   id: string;
   courseName: string;
-  category: string;
+  categoryId: Types.ObjectId;
   description: string;
   language: string;
   coursePrice: number;
   courseThumbnailUrl: string;
-  courseDemoVideoUrl: string;
+  courseDemoVideo: {
+    publicId: string;
+    version: string;
+  };
+  isBlocked?: boolean;
+  reason?: string;
   mentorId: string;
-  content: ILessonContent[];
+  lessons: ILessonContent[];
 }

@@ -1,10 +1,10 @@
-name: Build and publish auth service to Docker Hub
+name: Build and publish chat service to Docker Hub
 
 on:
   push:
     branches: ["main"]
     paths:
-      - "api-service/**"
+      - "chat-service/**"
   workflow_dispatch:
 
 jobs:
@@ -33,4 +33,4 @@ jobs:
           context: ./api-gateway/
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: jamsheerply/learnvoyage-auth:latest
+          tags: jamsheerply/learnvoyage-chat:latest

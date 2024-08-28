@@ -34,6 +34,7 @@ app.use("/auth", userRoutes);
 app.use("/instructor", intructorRoutes);
 
 const PORT = process.env.PORT!;
+
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
   await dbConnections();

@@ -20,6 +20,9 @@ const dbConnections_1 = __importDefault(require("../infrastructure/database/dbCo
 const categoriesRoute_1 = __importDefault(require("./routes/categoriesRoute"));
 const couresRoutes_1 = __importDefault(require("./routes/couresRoutes"));
 const enrollmentRoutes_1 = __importDefault(require("./routes/enrollmentRoutes"));
+const assessmentRoutes_1 = __importDefault(require("./routes/assessmentRoutes"));
+const resultRoutes_1 = __importDefault(require("./routes/resultRoutes"));
+const rateAndReviewRoutes_1 = __importDefault(require("./routes/rateAndReviewRoutes"));
 const consumerRpc_1 = require("../infrastructure/messageBroker/consumerRpc");
 const verifyToken_1 = require("../infrastructure/jwt/verifyToken");
 const videoStreaming_1 = __importDefault(require("./controllers/streaming/videoStreaming"));
@@ -33,13 +36,20 @@ app.get("/", verifyToken_1.jwtMiddleware, (req, res) => {
     });
 });
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://learn-voyage-frontend.vercel.app",
+        "https://learn-voyage.jamsheerply.life",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
 }));
 app.use("/category", categoriesRoute_1.default);
 app.use("/course", couresRoutes_1.default);
 app.use("/enrollment", enrollmentRoutes_1.default);
+app.use("/assessment", assessmentRoutes_1.default);
+app.use("/result", resultRoutes_1.default);
+app.use("/rate-and-review", rateAndReviewRoutes_1.default);
 app.use("/videos", videoStreaming_1.default);
 const PORT = process.env.PORT || 3004;
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {

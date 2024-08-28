@@ -6,6 +6,9 @@ import dbConnections from "../infrastructure/database/dbConnections";
 import categoryRoutes from "./routes/categoriesRoute";
 import courseRoutes from "./routes/couresRoutes";
 import enrollmentRoutes from "./routes/enrollmentRoutes";
+import assessmentRoutes from "./routes/assessmentRoutes";
+import resultRoutes from "./routes/resultRoutes";
+import rateAndReviewRoutes from "./routes/rateAndReviewRoutes";
 import { startConsumer } from "../infrastructure/messageBroker/consumerRpc";
 import { jwtMiddleware } from "../infrastructure/jwt/verifyToken";
 import videoRoutes from "./controllers/streaming/videoStreaming";
@@ -24,7 +27,11 @@ app.get("/", jwtMiddleware, (req: Request, res: Response) => {
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://learn-voyage-frontend.vercel.app",
+      "https://learn-voyage.jamsheerply.life",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -33,6 +40,9 @@ app.use(
 app.use("/category", categoryRoutes);
 app.use("/course", courseRoutes);
 app.use("/enrollment", enrollmentRoutes);
+app.use("/assessment", assessmentRoutes);
+app.use("/result", resultRoutes);
+app.use("/rate-and-review", rateAndReviewRoutes);
 app.use("/videos", videoRoutes);
 
 const PORT = process.env.PORT || 3004;

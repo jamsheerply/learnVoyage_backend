@@ -86,6 +86,7 @@ exports.CourseRepository = {
         return courseObject;
     }),
     updateCourse: (course) => __awaiter(void 0, void 0, void 0, function* () {
+        // console.log(course);
         const updatedCourse = yield courseModel_1.default.findByIdAndUpdate(course.id, course, { new: true });
         if (!updatedCourse) {
             throw new Error("Course not found");

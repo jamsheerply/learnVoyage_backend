@@ -51,10 +51,15 @@ export const signinController = async (req: Request, res: Response) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 60 * 1000,
+      sameSite: "none",
+      secure: true,
     }); // 14 minutes
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      sameSite: "none",
+      secure: true,
     });
 
     // Return response with tokens

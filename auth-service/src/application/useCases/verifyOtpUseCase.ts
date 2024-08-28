@@ -1,4 +1,3 @@
-// src/application/usecases/verifyOtpUseCase.ts
 import { IUserRepository } from "../../domain/interfaces/repositories/IUserRepository";
 
 export const verifyOtpUseCase = (userRepository: IUserRepository) => {

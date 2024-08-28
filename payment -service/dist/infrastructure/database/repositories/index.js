@@ -19,3 +19,4 @@ __exportStar(require("./updatePayment"), exports);
 __exportStar(require("./createSession"), exports);
 __exportStar(require("./getSessionById"), exports);
 __exportStar(require("./readPayment"), exports);
+__exportStar(require("./readPaymentTotalRevene"), exports);

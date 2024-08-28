@@ -55,7 +55,7 @@ export const jwtMiddleware = async (
         res.cookie("accessToken", newAccessToken, {
           httpOnly: true,
           maxAge: 60 * 1000,
-          sameSite: "strict",
+          sameSite: "none",
           secure: true,
         });
       }

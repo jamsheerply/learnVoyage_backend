@@ -18,4 +18,5 @@ export interface IRepositories {
     limit: number;
     payments: paymentEntity[];
   } | null>;
+  readPaymentTotalRevene: () => Promise<{ totalRevenue: number } | null>;
 }

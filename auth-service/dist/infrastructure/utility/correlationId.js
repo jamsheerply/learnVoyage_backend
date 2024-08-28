@@ -7,11 +7,8 @@
 //     Math.random().toString()
 //   );
 // };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateCorrelationId = void 0;
 // src/infrastructure/utility/correlationId.ts
-const uuid_1 = require("uuid");
-const generateCorrelationId = () => {
-    return (0, uuid_1.v4)();
-};
-exports.generateCorrelationId = generateCorrelationId;
+// import { v4 as uuidv4 } from "uuid";
+// export const generateCorrelationId = (): string => {
+//   return uuidv4();
+// };

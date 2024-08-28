@@ -67,7 +67,7 @@ const jwtMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, func
                 res.cookie("accessToken", newAccessToken, {
                     httpOnly: true,
                     maxAge: 60 * 1000,
-                    sameSite: "strict",
+                    sameSite: "none",
                     secure: true,
                 });
             }

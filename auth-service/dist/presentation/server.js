@@ -20,13 +20,16 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const instructorRoutes_1 = __importDefault(require("./routes/instructorRoutes"));
 const dbConnections_1 = __importDefault(require("../infrastructure/database/dbConnections"));
-const RMQConnections_1 = require("../infrastructure/messaging/RMQConnections");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://learn-voyage-frontend.vercel.app",
+        "https://learn-voyage.jamsheerply.life",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
 }));
@@ -40,6 +43,5 @@ app.use("/instructor", instructorRoutes_1.default);
 const PORT = process.env.PORT;
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Server is running on port ${PORT}`);
-    yield (0, RMQConnections_1.connectToRabbitMQ)();
     yield (0, dbConnections_1.default)();
 }));

@@ -1,8 +1,5 @@
-import { IUser } from "../../domain/entities/user.entity";
 import { IUserRepository } from "../../domain/interfaces/repositories/IUserRepository";
-import { UserRepository } from "../../infrastructure/database/repositories/UserRepositoryImpl";
-import { sendMessageToQueue } from "../../infrastructure/messaging/producer";
-import { generateCorrelationId } from "../../infrastructure/utility/correlationId";
+import { sendMessage } from "../../infrastructure/messageBroker/producerRpc";
 
 export const sendOtpUseCase = (UserRepository: IUserRepository) => {
   return async (userId: string, email: string) => {
@@ -12,16 +9,20 @@ export const sendOtpUseCase = (UserRepository: IUserRepository) => {
 
       await UserRepository.updateOtp(userId, otp);
 
-      const correlationId = generateCorrelationId();
+      const data = {
+        email: email,
+        message: otp,
+      };
 
-      await sendMessageToQueue(
-        "notification-service-2",
-        JSON.stringify({
-          email: email,
-          message: otp,
-          type: "otp",
-          correlationId,
-        })
+      // send-otp in user-service
+      sendMessage(
+        "notification-service",
+        { type: "sendOtp", data: data },
+        (response: any) => {
+          // Specify the type of response as any or more specific type if known
+          console.log("Response notification-service:", response);
+          // Handle the response here
+        }
       );
 
       return true;

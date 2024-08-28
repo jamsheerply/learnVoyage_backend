@@ -20,7 +20,7 @@ export const getEnrollmentByIdController = async (
     return res.status(200).json({ success: true, data: enrollment });
   } catch (error) {
     const customError = error as CustomError;
-    console.error("Error fetching enrollment", error);
+    console.error("Error fetching getEnrollmentById", error);
     return res
       .status(500)
       .json({ success: false, error: customError?.message });

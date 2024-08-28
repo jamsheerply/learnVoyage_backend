@@ -16,13 +16,13 @@ export const getEnrollmentByCourseIdController = async (
 
     if (!enrollmentByCourseId) {
       return res
-        .status(404) // Changed status code to 404 for not found
+        .status(200)
         .json({ success: false, error: "Enrollment not found" });
     }
     return res.status(200).json({ success: true, data: enrollmentByCourseId });
   } catch (error) {
     const customError = error as CustomError;
-    console.error("Error fetching enrollment", error);
+    console.error("Error fetching enrollment 2", error);
     return res
       .status(500)
       .json({ success: false, error: customError?.message });

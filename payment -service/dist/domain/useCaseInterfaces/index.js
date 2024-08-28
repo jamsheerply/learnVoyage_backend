@@ -19,3 +19,4 @@ __exportStar(require("./IUpdatePaymentUseCase"), exports);
 __exportStar(require("./IGetSessionUseCases"), exports);
 __exportStar(require("./ICreateSessionUseCase"), exports);
 __exportStar(require("./IReadPaymentUseCase"), exports);
+__exportStar(require("./IReadPaymentTotalRevenueUseCase"), exports);

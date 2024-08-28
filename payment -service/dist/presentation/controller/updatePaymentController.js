@@ -21,6 +21,7 @@ const updatePaymentController = (dependencies) => {
                 throw new Error("missing required status field");
             }
             const result = yield updatePaymentUseCase(dependencies).execute(req.body);
+            console.log("result?.status", result === null || result === void 0 ? void 0 : result.status);
             if ((result === null || result === void 0 ? void 0 : result._id) && result.status === "completed") {
                 (0, producerRpc_1.sendMessage)("content-management-service", {
                     type: "createEnrollment",

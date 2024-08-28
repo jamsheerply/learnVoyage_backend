@@ -8,7 +8,6 @@ const videoSchema = new mongoose_1.default.Schema({
     title: String,
     publicId: String,
     version: String,
-    adaptiveStreamingPublicId: String,
     // adaptiveStreamingUrl: String,
     createdAt: { type: Date, default: Date.now },
 });

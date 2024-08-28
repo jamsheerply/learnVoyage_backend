@@ -19,7 +19,7 @@ const UserRepositoryImpl_1 = require("../../infrastructure/database/repositories
 const bcrypt_1 = __importDefault(require("../../infrastructure/security/bcrypt"));
 const signupUseCase_1 = require("../../application/useCases/signupUseCase");
 const verifyOtpUseCase_1 = require("../../application/useCases/verifyOtpUseCase");
-const producerRpc_1 = require("../../infrastructure/messaging/producerRpc");
+const producerRpc_1 = require("../../infrastructure/messageBroker/producerRpc");
 const signupController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { firstName, lastName, email, password, role } = req.body;
@@ -51,6 +51,7 @@ const signupController = (req, res) => __awaiter(void 0, void 0, void 0, functio
             profit: 0,
         };
         const createdUser = yield (0, signupUseCase_1.signupUseCase)(UserRepositoryImpl_1.UserRepository, bcrypt_1.default)(newUser);
+        console.log(createdUser);
         if (!createdUser) {
             return res
                 .status(500)

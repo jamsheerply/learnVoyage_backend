@@ -97,4 +97,36 @@ exports.UserRepository = {
             throw new Error(customError === null || customError === void 0 ? void 0 : customError.message);
         }
     }),
+    readTotalStudentsAndInstructors: () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const readUser = yield userModel_1.default.aggregate([
+                {
+                    $match: {
+                        isVerified: true,
+                        role: { $in: ["student", "instructor"] },
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$role",
+                        total: { $sum: 1 },
+                    },
+                },
+            ]);
+            console.log("readUser", readUser);
+            return {
+                totalIntructors: readUser[0].total,
+                totalStudents: readUser[1].total,
+            };
+        }
+        catch (error) {
+            const customError = error;
+            throw new Error(customError === null || customError === void 0 ? void 0 : customError.message);
+        }
+    }),
+    // readTopInstructors:async()=>{
+    //   try {
+    //   } catch (error) {
+    //   }
+    // }
 };

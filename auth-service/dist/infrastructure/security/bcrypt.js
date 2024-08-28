@@ -1,6 +1,4 @@
 "use strict";
-// import bcrypt from "bcrypt";
-// import { IHashingService } from "../../domain/interfaces/services/IHashingService";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -14,20 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// const BcryptHashingService: IHashingService = {
-//   hash: async (password: string): Promise<string> => {
-//     const saltRounds = 10;
-//     return bcrypt.hash(password, saltRounds);
-//   },
-//   compare: async (
-//     password: string,
-//     hashedPassword: string
-//   ): Promise<boolean> => {
-//     return bcrypt.compare(password, hashedPassword);
-//   },
-// };
-// export default BcryptHashingService;
-// src/infrastructure/security/bcrypt.ts
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const BcryptHashingService = {
     hash: (password) => __awaiter(void 0, void 0, void 0, function* () {

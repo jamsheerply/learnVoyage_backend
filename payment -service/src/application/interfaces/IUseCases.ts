@@ -2,9 +2,11 @@ import {
   ICreatePaymentUseCase,
   ICreateSessionUseCase,
   IGetSessionByIdUseCase,
+  IReadPaymentTotalRevenueUseCase,
   IReadPaymentUseCase,
   IUpdatePaymentUseCase,
 } from "../../domain/useCaseInterfaces";
+
 import { IDependencies } from "./IDependencies";
 
 export interface IUseCases {
@@ -13,4 +15,7 @@ export interface IUseCases {
   createSessionUseCase: (dependecies: IDependencies) => ICreateSessionUseCase;
   getSessionByIdUseCase: (dependecies: IDependencies) => IGetSessionByIdUseCase;
   readPaymentUseCase: (dependecies: IDependencies) => IReadPaymentUseCase;
+  readPaymentTotalRevenueUseCase: (
+    dependecies: IDependencies
+  ) => IReadPaymentTotalRevenueUseCase;
 }

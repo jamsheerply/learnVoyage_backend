@@ -19,7 +19,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://learn-voyage-frontend.vercel.app",
+      "https://learn-voyage.jamsheerply.life",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -52,7 +56,11 @@ const server = app.listen(PORT, async () => {
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://learn-voyage-frontend.vercel.app",
+      "https://learn-voyage.jamsheerply.life",
+    ],
   },
 });
 

@@ -20,14 +20,14 @@ const getEnrollmentByCourseIdController = (req, res) => __awaiter(void 0, void 0
         const enrollmentByCourseId = yield (0, getEnrollemntCourseIdUseCase_1.getEnrollmentCourseIdUseCase)(enrollmentRepositoryImp_1.EnrollmentRepository)(courseId, userId);
         if (!enrollmentByCourseId) {
             return res
-                .status(404) // Changed status code to 404 for not found
+                .status(200)
                 .json({ success: false, error: "Enrollment not found" });
         }
         return res.status(200).json({ success: true, data: enrollmentByCourseId });
     }
     catch (error) {
         const customError = error;
-        console.error("Error fetching enrollment", error);
+        console.error("Error fetching enrollment 2", error);
         return res
             .status(500)
             .json({ success: false, error: customError === null || customError === void 0 ? void 0 : customError.message });

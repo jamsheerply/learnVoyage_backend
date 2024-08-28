@@ -87,4 +87,37 @@ export const UserRepository: IUserRepository = {
       throw new Error(customError?.message);
     }
   },
+  readTotalStudentsAndInstructors: async () => {
+    try {
+      const readUser = await UserModel.aggregate([
+        {
+          $match: {
+            isVerified: true,
+            role: { $in: ["student", "instructor"] },
+          },
+        },
+        {
+          $group: {
+            _id: "$role",
+            total: { $sum: 1 },
+          },
+        },
+      ]);
+      console.log("readUser", readUser);
+      return {
+        totalIntructors: readUser[0].total,
+        totalStudents: readUser[1].total,
+      };
+    } catch (error) {
+      const customError = error as CustomError;
+      throw new Error(customError?.message);
+    }
+  },
+  // readTopInstructors:async()=>{
+  //   try {
+
+  //   } catch (error) {
+
+  //   }
+  // }
 };

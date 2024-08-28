@@ -17,7 +17,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const notificationRoutes_1 = __importDefault(require("../presentation/routes/notificationRoutes"));
-const RMQConnections_1 = require("../infrastructure/messaging/RMQConnections");
+const consumerRpc_1 = require("../infrastructure/messageBroker/consumerRpc");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -27,7 +27,5 @@ app.use("/api", notificationRoutes_1.default);
 const PORT = process.env.PORT || 3003;
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`notification-server is running on port ${PORT}`);
-    yield (0, RMQConnections_1.connectToRabbitMQ)();
-    // await createQueue("notification-service-2");
-    // consumeMessages("notification-service-2");
+    (0, consumerRpc_1.startConsumer)("notification-service");
 }));

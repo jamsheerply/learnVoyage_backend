@@ -12,7 +12,11 @@ const app: Application = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://learn-voyage-frontend.vercel.app",
+      "https://learn-voyage.jamsheerply.life",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
   })

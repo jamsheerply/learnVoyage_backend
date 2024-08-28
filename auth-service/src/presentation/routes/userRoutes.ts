@@ -11,6 +11,8 @@ import { logoutController } from "../controller/logoutController";
 import { jwtMiddleware } from "../../infrastructure/security/jwt/verifyToken";
 import { getProfileByIdController } from "../controller/getProfileByIdController";
 import { updateProfileController } from "../controller/updateProfileController";
+import { readTotalStudentsAndInstructorsController } from "../controller/readTotalStudentsAndInstructorsController";
+import { getAllStudentsController } from "../controller/getAllStudentsController";
 dotenv.config();
 const router = Router();
 
@@ -22,5 +24,11 @@ router.get("/logout", logoutController);
 router.get("/isBlocked/:id", jwtMiddleware, isBlockedController);
 router.get("/profile/:id", jwtMiddleware, getProfileByIdController);
 router.patch("/update-profile", jwtMiddleware, updateProfileController);
+router.get("/readAllStudents", getAllStudentsController);
+router.get(
+  "/read/total-students-and-instructors",
+  jwtMiddleware,
+  readTotalStudentsAndInstructorsController
+);
 
 export default router;

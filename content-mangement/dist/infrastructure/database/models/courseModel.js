@@ -26,20 +26,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const lessonsSchema = new mongoose_1.Schema({
     lessonId: { type: String, required: true },
-    title: { type: String, required: true },
+    lessonTitle: { type: String, required: true },
     description: { type: String, required: true },
-    videoUrl: { type: String, required: true },
+    video: {
+        publicId: String,
+        version: String,
+    },
 });
 const courseSchema = new mongoose_1.Schema({
     mentorId: { type: String, required: true },
     courseName: { type: String, required: true },
-    categoryId: { type: String, required: true },
+    categoryId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Category",
+        required: true,
+    },
     description: { type: String, required: true },
     language: { type: String, required: true },
     coursePrice: { type: Number, required: true },
     courseThumbnailUrl: { type: String, required: true },
-    courseDemoVideoUrl: { type: String, required: true },
+    courseDemoVideo: {
+        publicId: String,
+        version: String,
+    },
     id: { type: String },
+    isBlocked: { type: Boolean, default: false },
+    reason: { type: String },
     lessons: { type: [lessonsSchema], default: [] },
 }, {
     timestamps: true,

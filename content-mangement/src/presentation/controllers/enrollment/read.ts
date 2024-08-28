@@ -36,7 +36,7 @@ export const readEnrollmentController = async (req: Request, res: Response) => {
     return res.status(200).json({ success: true, data: readEnrollment });
   } catch (error) {
     const customError = error as CustomError;
-    console.error("Error creating enrollment", error);
+    console.error("Error read enrollment", error);
     return res
       .status(500)
       .json({ success: false, error: customError?.message });

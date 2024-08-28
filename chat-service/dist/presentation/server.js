@@ -29,7 +29,11 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://learn-voyage-frontend.vercel.app",
+        "https://learn-voyage.jamsheerply.life",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
 }));
@@ -55,7 +59,11 @@ const server = app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function
 const io = new socket_io_1.Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "http://localhost:5173",
+        origin: [
+            "http://localhost:5173",
+            "https://learn-voyage-frontend.vercel.app",
+            "https://learn-voyage.jamsheerply.life",
+        ],
     },
 });
 io.on("connection", (socket) => {

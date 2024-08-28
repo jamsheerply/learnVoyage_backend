@@ -53,10 +53,14 @@ const signinController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             maxAge: 60 * 1000,
+            sameSite: "none",
+            secure: true,
         }); // 14 minutes
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+            sameSite: "none",
+            secure: true,
         });
         // Return response with tokens
         return res.status(201).json({ success: true, data: accessToken });

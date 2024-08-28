@@ -99,6 +99,7 @@ export const CourseRepository: ICourseRepository = {
   },
 
   updateCourse: async (course) => {
+    // console.log(course);
     const updatedCourse = await CourseModel.findByIdAndUpdate(
       course.id,
       course,

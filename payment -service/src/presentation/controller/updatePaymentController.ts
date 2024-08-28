@@ -14,6 +14,8 @@ export const updatePaymentController = (dependencies: IDependencies) => {
         throw new Error("missing required status field");
       }
       const result = await updatePaymentUseCase(dependencies).execute(req.body);
+      console.log("result?.status", result?.status);
+
       if (result?._id && result.status === "completed") {
         sendMessage(
           "content-management-service",

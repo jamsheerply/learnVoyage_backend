@@ -10,7 +10,7 @@ const generateAccessToken = (payload) => {
     const { id, email, role, isVerified, firstName } = payload;
     const newPayload = { id, email, role, isVerified, firstName };
     return jsonwebtoken_1.default.sign(newPayload, String(process.env.ACCESS_TOKEN_PRIVATE_KEY), {
-        expiresIn: "1s",
+        expiresIn: "1h",
     });
 };
 exports.generateAccessToken = generateAccessToken;

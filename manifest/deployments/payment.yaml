@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learn-voyage-payment-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: learn-voyage-payment-service
+  template:
+    metadata:
+      labels:
+        app: learn-voyage-payment-service
+    spec:
+      containers:
+        - name: learn-voyage-payment-service
+          image: jamsheerply/learnvoyage-payment:latest
+          envFrom:
+            - configMapRef:
+                name: payment-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: learn-voyage-payment-service
+spec:
+  selector:
+    app: learn-voyage-payment-service
+  ports:
+    - protocol: TCP
+      port: 7001
+      targetPort: 7001

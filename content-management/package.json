@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/presentation/server.ts",
-    "build": "tsc --watch",
-    "start": "node dist/index.js",
-    "build:dev": "concurrently --kill-others-on-fail \"npm run build\" \"npm run dev\""
+    "build": "tsc",
+    "buildWatch": "tsc --watch",
+    "start": "node dist/presentation/server.js",
+    "build:dev": "concurrently --kill-others-on-fail \"npm run buildWatch\" \"npm run dev\""
   },
   "keywords": [],
   "author": "",

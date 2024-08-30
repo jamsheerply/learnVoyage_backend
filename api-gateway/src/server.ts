@@ -29,7 +29,7 @@ app.use("/api/content-management", proxy("http://localhost:3003"));
 app.use("/api/payment-service", proxy("http://localhost:3005"));
 
 app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+  console.log(`Server started on port  api-gateway ${port}`);
 });
 
 //npm run build

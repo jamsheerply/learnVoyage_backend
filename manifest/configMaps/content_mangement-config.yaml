@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: content_mangement-config
+  name: content-management-config
   labels:
     app: learn-voyage-content_mangement-service
 data:

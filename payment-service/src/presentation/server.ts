@@ -36,7 +36,7 @@ app.use(errorHandler);
 app.use("*", (req: Request, res: Response) => {
   res
     .status(404)
-    .json({ success: false, status: 404, message: "Api Not found" });
+    .json({ success: false, status: 404, message: "Api Not found payment" });
 });
 
 const PORT = process.env.PORT!;

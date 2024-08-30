@@ -46,7 +46,15 @@ app.use("/rate-and-review", rateAndReviewRoutes);
 app.use("/videos", videoRoutes);
 
 const PORT = process.env.PORT || 3004;
-
+app.use("*", (req: Request, res: Response) => {
+  res
+    .status(404)
+    .json({
+      success: false,
+      status: 404,
+      message: "Api Not found content management",
+    });
+});
 app.listen(PORT, async () => {
   console.log(`content-management is runing on port ${PORT}`);
   await dbConnections();

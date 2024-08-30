@@ -24,14 +24,14 @@ app.use(
   })
 );
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/api/users", (req: Request, res: Response) => {
   res.status(200).json({
-    message: `chat service ON! port:${PORT}`,
+    message: `auth service ON! port:${PORT}`,
   });
 });
 
-app.use("/auth", userRoutes);
-app.use("/instructor", intructorRoutes);
+app.use("/api/users/auth", userRoutes);
+app.use("/api/users/instructor", intructorRoutes);
 
 const PORT = process.env.PORT!;
 

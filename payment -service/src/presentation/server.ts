@@ -42,6 +42,6 @@ app.use("*", (req: Request, res: Response) => {
 const PORT = process.env.PORT!;
 
 app.listen(PORT, async () => {
-  console.log(`connected to payement service : Port ${PORT}`);
+  console.log(`connected to payment service : Port ${PORT}`);
   await database();
 });

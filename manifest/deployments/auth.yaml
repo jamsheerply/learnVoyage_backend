@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learn-voyage-auth-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: learn-voyage-auth-service
+  template:
+    metadata:
+      labels:
+        app: learn-voyage-auth-service
+    spec:
+      containers:
+        - image: jamsheerply/learnvoyage-auth:latest
+          name: learn-voyage-auth-service
+          envFrom:
+            - configMapRef:
+                name: auth-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: learn-voyage-auth-service
+spec:
+  selector:
+    app: learn-voyage-auth-service
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001

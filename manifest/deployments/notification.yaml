@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learn-voyage-notification-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: learn-voyage-notification-service
+  template:
+    metadata:
+      labels:
+        app: learn-voyage-notification-service
+    spec:
+      containers:
+        - name: learn-voyage-notification-service
+          image: jamsheerply/learnvoyage-notification:latest
+          envFrom:
+            - configMapRef:
+                name: notification-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: learn-voyage-notification-service
+spec:
+  selector:
+    app: learn-voyage-notification-service
+  ports:
+    - protocol: TCP
+      port: 6001
+      targetPort: 6001

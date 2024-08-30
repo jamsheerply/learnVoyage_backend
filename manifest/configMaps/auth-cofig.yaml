@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-config
+  labels:
+    app: learn-voyage-auth-service
+data:
+  PORT: "3001"
+  DB_NAME: "learnvoyage"
+  DB_PASS: "learnvoyage123"
+  RMQ_URL: "amqps://rqbtlbqf:NbpGEmWqNbx5a-0XmYKweX-4TXwaum-v@puffin.rmq2.cloudamqp.com/rqbtlbqf"
+  JWT_SECRET: "LearnVoyage"
+  ACCESS_TOKEN_PRIVATE_KEY: "LearnVoyageAccessToken"
+  REFRESH_TOKEN_PRIVATE_KEY: "LearnVoyageRefreshToken"

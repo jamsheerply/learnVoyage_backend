@@ -30,7 +30,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./api-gateway/
+          context: ./payment-service/
           platforms: linux/amd64,linux/arm64
           push: true
           tags: jamsheerply/learnvoyage-payment:latest

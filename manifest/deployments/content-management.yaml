@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learn-voyage-content-management-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: learn-voyage-content-management-service
+  template:
+    metadata:
+      labels:
+        app: learn-voyage-content-management-service
+    spec:
+      containers:
+        - name: learn-voyage-content-management-service
+          image: jamsheerply/learnvoyage-content_management:latest
+          envFrom:
+            - configMapRef:
+                name: content-management-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: learn-voyage-content-management-service
+spec:
+  selector:
+    app: learn-voyage-content-management-service
+  ports:
+    - protocol: TCP
+      port: 5001
+      targetPort: 5001

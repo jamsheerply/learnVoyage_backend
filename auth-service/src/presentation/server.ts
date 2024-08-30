@@ -24,18 +24,26 @@ app.use(
   })
 );
 
-app.get("/api/users", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: `auth service ON! port:${PORT}`,
   });
 });
 
-app.use("/api/users/auth", userRoutes);
-app.use("/api/users/instructor", intructorRoutes);
+app.use("/auth", userRoutes);
+app.use("/instructor", intructorRoutes);
 
 const PORT = process.env.PORT!;
-
+app.use("*", (req: Request, res: Response) => {
+  res
+    .status(404)
+    .json({
+      success: false,
+      status: 404,
+      message: "Api Not found auth service",
+    });
+});
 app.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`auth Server is running on port ${PORT}`);
   await dbConnections();
 });

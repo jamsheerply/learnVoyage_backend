@@ -23,13 +23,13 @@ app.use(
   })
 );
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/api/payment-service", (req: Request, res: Response) => {
   res.status(200).json({
     message: `Payment service ON! Port : ${PORT}`,
   });
 });
 
-app.use("/", paymentRoutes(dependencies));
+app.use("/api/payment-service", paymentRoutes(dependencies));
 
 app.use(errorHandler);
 

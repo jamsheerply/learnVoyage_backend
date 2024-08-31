@@ -22,11 +22,12 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
 }));
 app.use("/api/users", (0, express_http_proxy_1.default)("http://localhost:3001"));
-app.use("/api/content-management", (0, express_http_proxy_1.default)("http://localhost:3004"));
+app.use("/api/chat-service", (0, express_http_proxy_1.default)("http://localhost:3002"));
+app.use("/api/content-management", (0, express_http_proxy_1.default)("http://localhost:3003"));
+//notification 3004
 app.use("/api/payment-service", (0, express_http_proxy_1.default)("http://localhost:3005"));
-app.use("/api/chat-service", (0, express_http_proxy_1.default)("http://localhost:3006"));
 app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
+    console.log(`Server started on port  api-gateway ${port}`);
 });
 //npm run build
 //npm start

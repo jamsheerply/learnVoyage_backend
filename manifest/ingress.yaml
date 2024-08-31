@@ -15,7 +15,8 @@ metadata:
 spec:
   ingressClassName: webapprouting.kubernetes.azure.com
   rules:
-    - http:
+    - host: jamsheerply.life
+      http:
         paths:
           - path: /api/users
             pathType: Prefix

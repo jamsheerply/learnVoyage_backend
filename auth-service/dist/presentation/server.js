@@ -35,13 +35,22 @@ app.use((0, cors_1.default)({
 }));
 app.get("/", (req, res) => {
     res.status(200).json({
-        message: `chat service ON! port:${PORT}`,
+        message: `auth service ON! port:${PORT}`,
     });
 });
 app.use("/auth", userRoutes_1.default);
 app.use("/instructor", instructorRoutes_1.default);
 const PORT = process.env.PORT;
+app.use("*", (req, res) => {
+    res
+        .status(404)
+        .json({
+        success: false,
+        status: 404,
+        message: "Api Not found auth service",
+    });
+});
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`auth Server is running on port ${PORT}`);
     yield (0, dbConnections_1.default)();
 }));

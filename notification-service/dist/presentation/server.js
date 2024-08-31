@@ -23,8 +23,22 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)());
-app.use("/api", notificationRoutes_1.default);
+app.use("/", (req, res) => {
+    res.status(200).json({
+        success: false,
+        status: 200,
+        message: " notification is on ",
+    });
+});
+app.use("/api/notification", notificationRoutes_1.default);
 const PORT = process.env.PORT || 3003;
+app.use("*", (req, res) => {
+    res.status(404).json({
+        success: false,
+        status: 404,
+        message: "Api Not found notification",
+    });
+});
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`notification-server is running on port ${PORT}`);
     (0, consumerRpc_1.startConsumer)("notification-service");

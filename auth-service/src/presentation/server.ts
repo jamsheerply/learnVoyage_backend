@@ -1,10 +1,9 @@
-// src/server.ts
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes";
-import intructorRoutes from "./routes/instructorRoutes";
+import instructorRoutes from "./routes/instructorRoutes";
 import dbConnections from "../infrastructure/database/dbConnections";
 
 dotenv.config();
@@ -24,26 +23,27 @@ app.use(
   })
 );
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/api/users", (req: Request, res: Response) => {
   res.status(200).json({
     message: `auth service ON! port:${PORT}`,
   });
 });
 
-app.use("/auth", userRoutes);
-app.use("/instructor", intructorRoutes);
+app.use("/api/users/auth", userRoutes);
+app.use("/api/users/instructor", instructorRoutes);
 
-const PORT = process.env.PORT!;
+const PORT = parseInt(process.env.PORT || "3000", 10);
+
 app.use("*", (req: Request, res: Response) => {
-  res
-    .status(404)
-    .json({
-      success: false,
-      status: 404,
-      message: "Api Not found auth service",
-    });
+  res.status(404).json({
+    success: false,
+    status: 404,
+    message: "API not found in auth service",
+  });
 });
+
 app.listen(PORT, async () => {
-  console.log(`auth Server is running on port ${PORT}`);
+  console.log(`Auth server is running on port ${PORT}`);
+
   await dbConnections();
 });

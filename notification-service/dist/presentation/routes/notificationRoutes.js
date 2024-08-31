@@ -10,5 +10,5 @@ const notificationService_1 = require("../../application/services/notificationSe
 const nodemailerClient_1 = require("../../infrastructure/email/nodemailerClient");
 const router = express_1.default.Router();
 const notificationService = (0, notificationService_1.sendNotification)(nodemailerClient_1.nodemailerClient);
-router.post("/notifications", (0, notificationController_1.sendNotificationController)(notificationService));
+router.post("/send-otp", (0, notificationController_1.sendNotificationController)(notificationService));
 exports.default = router;

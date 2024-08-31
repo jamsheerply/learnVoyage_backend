@@ -29,15 +29,15 @@ app.use(
   })
 );
 
-app.get("/", jwtMiddleware, (req: Request, res: Response) => {
+app.get("/api/chat-service", jwtMiddleware, (req: Request, res: Response) => {
   res.status(200).json({
     message: `chat service ON! port:${PORT}`,
   });
 });
 
 const PORT = process.env.PORT!;
-app.use("/", chatRoutes(dependencies));
-app.use("/", messageRoutes(dependencies));
+app.use("/api/chat-service", chatRoutes(dependencies));
+app.use("/api/chat-service", messageRoutes(dependencies));
 
 app.use(errorHandler);
 

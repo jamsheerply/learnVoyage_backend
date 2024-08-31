@@ -7,6 +7,6 @@ import { nodemailerClient } from "../../infrastructure/email/nodemailerClient";
 const router = express.Router();
 const notificationService = sendNotification(nodemailerClient);
 
-router.post("/send-otp", sendNotificationController(notificationService));
+router.post("/notifications", sendNotificationController(notificationService));
 
 export default router;

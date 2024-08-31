@@ -19,11 +19,15 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", jwtMiddleware, (req: Request, res: Response) => {
-  res.status(200).json({
-    message: `content Management service ON! port:${PORT}`,
-  });
-});
+app.get(
+  "/api/content-management",
+  jwtMiddleware,
+  (req: Request, res: Response) => {
+    res.status(200).json({
+      message: `content Management service ON! port:${PORT}`,
+    });
+  }
+);
 
 app.use(
   cors({
@@ -37,23 +41,21 @@ app.use(
   })
 );
 
-app.use("/category", categoryRoutes);
-app.use("/course", courseRoutes);
-app.use("/enrollment", enrollmentRoutes);
-app.use("/assessment", assessmentRoutes);
-app.use("/result", resultRoutes);
-app.use("/rate-and-review", rateAndReviewRoutes);
-app.use("/videos", videoRoutes);
+app.use("/api/content-management/category", categoryRoutes);
+app.use("/api/content-management/course", courseRoutes);
+app.use("/api/content-management/enrollment", enrollmentRoutes);
+app.use("/api/content-management/assessment", assessmentRoutes);
+app.use("/api/content-management/result", resultRoutes);
+app.use("/api/content-management/rate-and-review", rateAndReviewRoutes);
+app.use("/api/content-management/videos", videoRoutes);
 
 const PORT = process.env.PORT || 3004;
 app.use("*", (req: Request, res: Response) => {
-  res
-    .status(404)
-    .json({
-      success: false,
-      status: 404,
-      message: "Api Not found content management",
-    });
+  res.status(404).json({
+    success: false,
+    status: 404,
+    message: "Api Not found content management",
+  });
 });
 app.listen(PORT, async () => {
   console.log(`content-management is runing on port ${PORT}`);

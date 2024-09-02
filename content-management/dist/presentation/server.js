@@ -50,13 +50,13 @@ app.get(`${basePath}/health`, verifyToken_1.jwtMiddleware, (req, res) => {
     });
 });
 // Apply routes
-app.use("/api/chat-service/category", categoriesRoute_1.default);
-app.use("/api/chat-service/course", couresRoutes_1.default);
-app.use("/api/chat-service /enrollment", enrollmentRoutes_1.default);
-app.use("/api/chat-service/assessment", assessmentRoutes_1.default);
-app.use("/api/chat-service/result", resultRoutes_1.default);
-app.use("/api/chat-service/rate-and-review", rateAndReviewRoutes_1.default);
-app.use("/api/chat-service/videos", videoStreaming_1.default);
+app.use("/api/content-management/category", categoriesRoute_1.default);
+app.use("/api/content-management/course", couresRoutes_1.default);
+app.use("/api/content-management/enrollment", enrollmentRoutes_1.default);
+app.use("/api/content-management/assessment", assessmentRoutes_1.default);
+app.use("/api/content-management/result", resultRoutes_1.default);
+app.use("/api/content-management/rate-and-review", rateAndReviewRoutes_1.default);
+app.use("/api/content-management/videos", videoStreaming_1.default);
 // 404 handler
 app.use("*", (req, res) => {
     res.status(404).json({

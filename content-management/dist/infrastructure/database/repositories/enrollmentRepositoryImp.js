@@ -436,4 +436,60 @@ exports.EnrollmentRepository = {
             throw new Error(customError === null || customError === void 0 ? void 0 : customError.message);
         }
     }),
+    readByInstructorId: (mentorId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const courses = yield courseModel_1.default.find({ mentorId: mentorId });
+            const courseIds = courses.map((course) => course._id);
+            const enrollmentsForMentor = yield enrollmentModel_1.EnrollmentModel.find({
+                courseId: { $in: courseIds },
+            }).populate("courseId");
+            const totalEnrollments = enrollmentsForMentor.length;
+            return totalEnrollments;
+        }
+        catch (error) {
+            const customError = error;
+            console.log("courseStatus", customError.message);
+            throw new Error(customError === null || customError === void 0 ? void 0 : customError.message);
+        }
+    }),
+    readTotalRevenue: (mentorId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const courses = yield courseModel_1.default.find({ mentorId: mentorId });
+            const courseIds = courses.map((course) => course._id);
+            const totalRevenue = yield enrollmentModel_1.EnrollmentModel.aggregate([
+                { $match: { courseId: { $in: courseIds } } },
+                {
+                    $lookup: {
+                        from: "courses",
+                        localField: "courseId",
+                        foreignField: "_id",
+                        as: "course",
+                    },
+                },
+                {
+                    $unwind: "$course",
+                },
+                {
+                    $group: {
+                        _id: null,
+                        totalRevenue: {
+                            $sum: {
+                                $cond: [
+                                    { $gt: ["$course.coursePrice", 0] },
+                                    "$course.coursePrice",
+                                    0,
+                                ],
+                            },
+                        },
+                    },
+                },
+            ]);
+            return totalRevenue[0].totalRevenue;
+        }
+        catch (error) {
+            const customError = error;
+            console.log("courseStatus", customError.message);
+            throw new Error(customError === null || customError === void 0 ? void 0 : customError.message);
+        }
+    }),
 };

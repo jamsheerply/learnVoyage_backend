@@ -38,4 +38,6 @@ export interface IEnrollmentRepository {
   readRecentEnrollment(userId: string): Promise<EnrollmentEntity[] | null>;
   readTopCourses(): Promise<EnrollmentEntity[] | null>;
   readCourseStatus(): Promise<EnrollmentEntity[] | null>;
+  readByInstructorId(mentorId: string): Promise<number | null>;
+  readTotalRevenue(mentorId: string): Promise<number | null>;
 }

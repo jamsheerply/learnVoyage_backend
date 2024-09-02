@@ -9,29 +9,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateEnrollmentController = void 0;
-const enrollmentRepositoryImp_1 = require("../../../infrastructure/database/repositories/enrollmentRepositoryImp");
-const updateEnrollmentUseCase_1 = require("../../../application/useCases/enrollment/updateEnrollmentUseCase");
-const updateEnrollmentController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateResultController = void 0;
+const updateResultUseCase_1 = require("../../../application/useCases/result/updateResultUseCase");
+const ResultRepositoryImp_1 = require("../../../infrastructure/database/repositories/ResultRepositoryImp");
+const updateResultController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const updateData = Object.assign({ _id: id }, req.body);
-        const updateEnrollment = yield (0, updateEnrollmentUseCase_1.updateEnrollmentUseCase)(enrollmentRepositoryImp_1.EnrollmentRepository)(updateData);
-        if (!updateEnrollment) {
+        const updateResult = yield (0, updateResultUseCase_1.updateResultUseCase)(ResultRepositoryImp_1.ResultRepository)(updateData);
+        if (!updateResult) {
             return res.status(200).json({
                 success: false,
-                error: "Enrollment not found or update failed",
+                error: "Result not found or update failed",
             });
         }
-        return res.status(200).json({ success: true, data: updateEnrollment });
+        return res.status(200).json({ success: true, data: updateResult });
     }
     catch (error) {
         const customError = error;
-        console.error("Error updating Enrollment", error);
-        return res.status(500).json({
-            success: false,
-            error: (customError === null || customError === void 0 ? void 0 : customError.message) || "Internal server error",
-        });
+        console.error("Error create result", error);
+        return res
+            .status(500)
+            .json({ success: false, error: customError === null || customError === void 0 ? void 0 : customError.message });
     }
 });
-exports.updateEnrollmentController = updateEnrollmentController;
+exports.updateResultController = updateResultController;

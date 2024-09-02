@@ -462,4 +462,60 @@ export const EnrollmentRepository: IEnrollmentRepository = {
       throw new Error(customError?.message);
     }
   },
+  readByInstructorId: async (mentorId) => {
+    try {
+      const courses = await CourseModel.find({ mentorId: mentorId });
+      const courseIds = courses.map((course) => course._id);
+      const enrollmentsForMentor = await EnrollmentModel.find({
+        courseId: { $in: courseIds },
+      }).populate("courseId");
+
+      const totalEnrollments = enrollmentsForMentor.length;
+      return totalEnrollments;
+    } catch (error) {
+      const customError = error as CustomError;
+      console.log("courseStatus", customError.message);
+      throw new Error(customError?.message);
+    }
+  },
+  readTotalRevenue: async (mentorId) => {
+    try {
+      const courses = await CourseModel.find({ mentorId: mentorId });
+      const courseIds = courses.map((course) => course._id);
+      const totalRevenue = await EnrollmentModel.aggregate([
+        { $match: { courseId: { $in: courseIds } } },
+        {
+          $lookup: {
+            from: "courses",
+            localField: "courseId",
+            foreignField: "_id",
+            as: "course",
+          },
+        },
+        {
+          $unwind: "$course",
+        },
+        {
+          $group: {
+            _id: null,
+            totalRevenue: {
+              $sum: {
+                $cond: [
+                  { $gt: ["$course.coursePrice", 0] },
+                  "$course.coursePrice",
+                  0,
+                ],
+              },
+            },
+          },
+        },
+      ]);
+
+      return totalRevenue[0].totalRevenue;
+    } catch (error) {
+      const customError = error as CustomError;
+      console.log("courseStatus", customError.message);
+      throw new Error(customError?.message);
+    }
+  },
 };

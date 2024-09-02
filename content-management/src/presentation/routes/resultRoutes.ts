@@ -4,6 +4,7 @@ import { createResultController } from "../controllers/result/create";
 import { readResultByAssessmentIdController } from "../controllers/result/readByAssessmentId";
 import { readResultController } from "../controllers/result/read";
 import { readResultExamPassRateController } from "../controllers/result/readExamPassRate";
+import { updateResultController } from "../controllers/result/update";
 
 const router = Router();
 router.post("/create", jwtMiddleware, createResultController);
@@ -18,4 +19,5 @@ router.get(
   readResultByAssessmentIdController
 );
 router.get("/read", jwtMiddleware, readResultController);
+router.patch("/update/:id", jwtMiddleware, updateResultController);
 export default router;

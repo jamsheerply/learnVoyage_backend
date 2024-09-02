@@ -22,6 +22,8 @@ const database_1 = __importDefault(require("../_boot/database"));
 const paymentRoutes_1 = require("../infrastructure/routes/paymentRoutes");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+const PORT = process.env.PORT || 3005;
+const isProduction = process.env.NODE_ENV === "production";
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
@@ -33,20 +35,27 @@ app.use((0, cors_1.default)({
     credentials: true,
     optionsSuccessStatus: 200,
 }));
-app.get("/", (req, res) => {
+// Base path for routes
+const basePath = isProduction ? "/api/payment-service" : "";
+// Health check route
+app.get(`${basePath}/health`, (req, res) => {
     res.status(200).json({
-        message: `Payment service ON! Port : ${PORT}`,
+        message: `Payment service ON! Port: ${PORT}`,
     });
 });
-app.use("/", (0, paymentRoutes_1.paymentRoutes)(dependencies_1.dependencies));
+// Apply routes
+app.use(basePath, (0, paymentRoutes_1.paymentRoutes)(dependencies_1.dependencies));
+// Error handling middleware
 app.use(errorhandler_1.default);
+// 404 handler
 app.use("*", (req, res) => {
-    res
-        .status(404)
-        .json({ success: false, status: 404, message: "Api Not found" });
+    res.status(404).json({
+        success: false,
+        status: 404,
+        message: "API not found in payment service",
+    });
 });
-const PORT = process.env.PORT;
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`connected to payement service : Port ${PORT}`);
+    console.log(`connected to payment service : Port ${PORT}`);
     yield (0, database_1.default)();
 }));

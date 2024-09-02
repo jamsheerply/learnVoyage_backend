@@ -26,6 +26,8 @@ const messageRoutes_1 = require("../infrastructure/routes/messageRoutes");
 const socket_io_1 = require("socket.io");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+const PORT = process.env.PORT || 4001;
+const isProduction = process.env.NODE_ENV === "production";
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
@@ -37,22 +39,26 @@ app.use((0, cors_1.default)({
     credentials: true,
     optionsSuccessStatus: 200,
 }));
-app.get("/", verifyToken_1.jwtMiddleware, (req, res) => {
+// Base path for routes
+const basePath = isProduction ? "/api/chat-service" : "";
+// Health check route
+app.get(`${basePath}/health`, verifyToken_1.jwtMiddleware, (req, res) => {
     res.status(200).json({
-        message: `chat service ON! port:${PORT}`,
+        message: `Chat service ON! Port: ${PORT}`,
     });
 });
-const PORT = process.env.PORT;
-app.use("/", (0, chatRoutes_1.chatRoutes)(dependencies_1.dependencies));
-app.use("/", (0, messageRoutes_1.messageRoutes)(dependencies_1.dependencies));
+// Apply routes
+app.use(basePath, (0, chatRoutes_1.chatRoutes)(dependencies_1.dependencies));
+app.use(basePath, (0, messageRoutes_1.messageRoutes)(dependencies_1.dependencies));
 app.use(errorhandler_1.default);
+// 404 handler
 app.use("*", (req, res) => {
     res
         .status(404)
-        .json({ success: false, status: 404, message: "Api Not found" });
+        .json({ success: false, status: 404, message: "API Not found" });
 });
 const server = app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`connected to chat service : Port ${PORT}`);
+    console.log(`Connected to chat service: Port ${PORT}`);
     yield (0, database_1.default)();
     (0, consumerRpc_1.startConsumer)("chat-service");
 }));
@@ -67,33 +73,32 @@ const io = new socket_io_1.Server(server, {
     },
 });
 io.on("connection", (socket) => {
-    console.log("connected to socket.io");
+    console.log("Connected to socket.io");
     socket.on("setup", (userId) => {
         socket.join(userId);
         socket.emit("connected");
     });
     socket.on("join chat", (room) => {
         socket.join(room);
-        console.log("user joined room:" + room);
+        console.log("User joined room:" + room);
     });
     socket.on("typing", (room) => socket.in(room).emit("typing"));
     socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
     socket.on("new message", (newMessageReceived) => {
-        console.log("new message");
-        console.log(JSON.stringify(newMessageReceived));
-        var chat = newMessageReceived.chat;
+        console.log("New message:", JSON.stringify(newMessageReceived));
+        const chat = newMessageReceived.chat;
         if (!chat.users)
             return console.log("chat.users not defined");
         chat.users.forEach((user) => {
             if (user._id == newMessageReceived.sender._id)
                 return;
-            console.log("message recived");
-            console.log(JSON.stringify(newMessageReceived));
+            console.log("Message received:", JSON.stringify(newMessageReceived));
             socket.in(user._id).emit("message received", newMessageReceived);
         });
     });
-    // socket.off("setup", () => {
-    //   console.log("user disconnected");
-    //   socket.leave(userId);
+    // Uncomment if you want to handle disconnections
+    // socket.on("disconnect", () => {
+    //   console.log("User disconnected");
+    //   // Additional cleanup if needed
     // });
 });

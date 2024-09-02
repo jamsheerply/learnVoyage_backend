@@ -27,7 +27,7 @@ app.use(
 );
 
 // Health check route
-app.get("/health", (req: Request, res: Response) => {
+app.get("/api/users", (req: Request, res: Response) => {
   res.status(200).json({
     message: `Auth service is healthy! Running on port: ${PORT}`,
     environment: isProduction ? "production" : "development",
@@ -35,15 +35,10 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 // Routes
-if (isProduction) {
-  // Production routes (for use with Ingress)
-  app.use("/api/users/auth", userRoutes);
-  app.use("/api/users/instructor", instructorRoutes);
-} else {
-  // Development routes (for use with API Gateway)
-  app.use("/auth", userRoutes);
-  app.use("/instructor", instructorRoutes);
-}
+
+// Production routes (for use with Ingress)
+app.use("/api/users/auth", userRoutes);
+app.use("/api/users/instructor", instructorRoutes);
 
 // 404 handler
 app.use("*", (req: Request, res: Response) => {

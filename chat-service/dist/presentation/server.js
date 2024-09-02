@@ -42,14 +42,14 @@ app.use((0, cors_1.default)({
 // Base path for routes
 const basePath = isProduction ? "/api/chat-service" : "";
 // Health check route
-app.get(`${basePath}/health`, verifyToken_1.jwtMiddleware, (req, res) => {
+app.get(`/api/chat-service/health`, verifyToken_1.jwtMiddleware, (req, res) => {
     res.status(200).json({
         message: `Chat service ON! Port: ${PORT}`,
     });
 });
 // Apply routes
-app.use(basePath, (0, chatRoutes_1.chatRoutes)(dependencies_1.dependencies));
-app.use(basePath, (0, messageRoutes_1.messageRoutes)(dependencies_1.dependencies));
+app.use("/api/chat-service", (0, chatRoutes_1.chatRoutes)(dependencies_1.dependencies));
+app.use("/api/chat-service", (0, messageRoutes_1.messageRoutes)(dependencies_1.dependencies));
 app.use(errorhandler_1.default);
 // 404 handler
 app.use("*", (req, res) => {

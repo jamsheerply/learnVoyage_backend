@@ -38,13 +38,13 @@ app.use((0, cors_1.default)({
 // Base path for routes
 const basePath = isProduction ? "/api/payment-service" : "";
 // Health check route
-app.get(`${basePath}/health`, (req, res) => {
+app.get("/api/payment-service/health", (req, res) => {
     res.status(200).json({
         message: `Payment service ON! Port: ${PORT}`,
     });
 });
 // Apply routes
-app.use(basePath, (0, paymentRoutes_1.paymentRoutes)(dependencies_1.dependencies));
+app.use("/api/payment-service", (0, paymentRoutes_1.paymentRoutes)(dependencies_1.dependencies));
 // Error handling middleware
 app.use(errorhandler_1.default);
 // 404 handler

@@ -35,15 +35,19 @@ app.use(
 const basePath = isProduction ? "/api/chat-service" : "";
 
 // Health check route
-app.get(`${basePath}/health`, jwtMiddleware, (req: Request, res: Response) => {
-  res.status(200).json({
-    message: `Chat service ON! Port: ${PORT}`,
-  });
-});
+app.get(
+  `/api/chat-service/health`,
+  jwtMiddleware,
+  (req: Request, res: Response) => {
+    res.status(200).json({
+      message: `Chat service ON! Port: ${PORT}`,
+    });
+  }
+);
 
 // Apply routes
-app.use(basePath, chatRoutes(dependencies));
-app.use(basePath, messageRoutes(dependencies));
+app.use("/api/chat-service", chatRoutes(dependencies));
+app.use("/api/chat-service", messageRoutes(dependencies));
 
 app.use(errorHandler);
 

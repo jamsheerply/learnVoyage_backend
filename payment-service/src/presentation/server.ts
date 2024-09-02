@@ -31,14 +31,14 @@ app.use(
 const basePath = isProduction ? "/api/payment-service" : "";
 
 // Health check route
-app.get(`${basePath}/health`, (req: Request, res: Response) => {
+app.get("/api/payment-service/health", (req: Request, res: Response) => {
   res.status(200).json({
     message: `Payment service ON! Port: ${PORT}`,
   });
 });
 
 // Apply routes
-app.use(basePath, paymentRoutes(dependencies));
+app.use("/api/payment-service", paymentRoutes(dependencies));
 
 // Error handling middleware
 app.use(errorHandler);

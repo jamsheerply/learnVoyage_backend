@@ -44,13 +44,13 @@ app.get(`${basePath}/health`, jwtMiddleware, (req: Request, res: Response) => {
 });
 
 // Apply routes
-app.use("/api/chat-service/category", categoryRoutes);
-app.use("/api/chat-service/course", courseRoutes);
-app.use("/api/chat-service /enrollment", enrollmentRoutes);
-app.use("/api/chat-service/assessment", assessmentRoutes);
-app.use("/api/chat-service/result", resultRoutes);
-app.use("/api/chat-service/rate-and-review", rateAndReviewRoutes);
-app.use("/api/chat-service/videos", videoRoutes);
+app.use("/api/content-management/category", categoryRoutes);
+app.use("/api/content-management/course", courseRoutes);
+app.use("/api/content-management/enrollment", enrollmentRoutes);
+app.use("/api/content-management/assessment", assessmentRoutes);
+app.use("/api/content-management/result", resultRoutes);
+app.use("/api/content-management/rate-and-review", rateAndReviewRoutes);
+app.use("/api/content-management/videos", videoRoutes);
 
 // 404 handler
 app.use("*", (req: Request, res: Response) => {

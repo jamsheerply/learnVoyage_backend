@@ -18,6 +18,7 @@ export interface IResultRespository {
     limit: number;
     results: PopulatedResult[];
   } | null>;
+  updateResult(resultData: ResultEntity): Promise<ResultEntity | null>;
   readResultExamsPassRate(
     userId: string
   ): Promise<{ passed: number; failed: number; pending: number } | null>;

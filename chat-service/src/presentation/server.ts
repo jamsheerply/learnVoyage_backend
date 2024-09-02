@@ -14,6 +14,8 @@ import { Server } from "socket.io";
 dotenv.config();
 
 const app: Application = express();
+const PORT = process.env.PORT || 4001;
+const isProduction = process.env.NODE_ENV === "production";
 
 app.use(express.json());
 app.use(cookieParser());
@@ -29,26 +31,31 @@ app.use(
   })
 );
 
-app.get("/api/chat-service", jwtMiddleware, (req: Request, res: Response) => {
+// Base path for routes
+const basePath = isProduction ? "/api/chat-service" : "";
+
+// Health check route
+app.get(`${basePath}/health`, jwtMiddleware, (req: Request, res: Response) => {
   res.status(200).json({
-    message: `chat service ON! port:${PORT}`,
+    message: `Chat service ON! Port: ${PORT}`,
   });
 });
 
-const PORT = process.env.PORT!;
-app.use("/api/chat-service", chatRoutes(dependencies));
-app.use("/api/chat-service", messageRoutes(dependencies));
+// Apply routes
+app.use(basePath, chatRoutes(dependencies));
+app.use(basePath, messageRoutes(dependencies));
 
 app.use(errorHandler);
 
+// 404 handler
 app.use("*", (req: Request, res: Response) => {
   res
     .status(404)
-    .json({ success: false, status: 404, message: "Api Not found" });
+    .json({ success: false, status: 404, message: "API Not found" });
 });
 
 const server = app.listen(PORT, async () => {
-  console.log(`connected to chat service : Port ${PORT}`);
+  console.log(`Connected to chat service: Port ${PORT}`);
   await database();
   startConsumer("chat-service");
 });
@@ -65,7 +72,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("connected to socket.io");
+  console.log("Connected to socket.io");
 
   socket.on("setup", (userId) => {
     socket.join(userId);
@@ -74,28 +81,27 @@ io.on("connection", (socket) => {
 
   socket.on("join chat", (room) => {
     socket.join(room);
-    console.log("user joined room:" + room);
+    console.log("User joined room:" + room);
   });
 
   socket.on("typing", (room) => socket.in(room).emit("typing"));
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
   socket.on("new message", (newMessageReceived) => {
-    console.log("new message");
-    console.log(JSON.stringify(newMessageReceived));
-    var chat = newMessageReceived.chat;
+    console.log("New message:", JSON.stringify(newMessageReceived));
+    const chat = newMessageReceived.chat;
     if (!chat.users) return console.log("chat.users not defined");
 
     chat.users.forEach((user: any) => {
       if (user._id == newMessageReceived.sender._id) return;
-      console.log("message recived");
-      console.log(JSON.stringify(newMessageReceived));
+      console.log("Message received:", JSON.stringify(newMessageReceived));
       socket.in(user._id).emit("message received", newMessageReceived);
     });
   });
 
-  // socket.off("setup", () => {
-  //   console.log("user disconnected");
-  //   socket.leave(userId);
+  // Uncomment if you want to handle disconnections
+  // socket.on("disconnect", () => {
+  //   console.log("User disconnected");
+  //   // Additional cleanup if needed
   // });
 });

@@ -19,7 +19,7 @@ export const updateEnrollmentController = async (
       EnrollmentRepository
     )(updateData);
     if (!updateEnrollment) {
-      return res.status(404).json({
+      return res.status(200).json({
         success: false,
         error: "Enrollment not found or update failed",
       });

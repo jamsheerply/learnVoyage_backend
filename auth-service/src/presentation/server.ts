@@ -9,6 +9,9 @@ import dbConnections from "../infrastructure/database/dbConnections";
 dotenv.config();
 
 const app = express();
+const PORT = parseInt(process.env.PORT || "3001", 10);
+const isProduction = process.env.NODE_ENV === "production";
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -23,17 +26,26 @@ app.use(
   })
 );
 
-app.get("/api/users", (req: Request, res: Response) => {
+// Health check route
+app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({
-    message: `auth service ON! port:${PORT}`,
+    message: `Auth service is healthy! Running on port: ${PORT}`,
+    environment: isProduction ? "production" : "development",
   });
 });
 
-app.use("/api/users/auth", userRoutes);
-app.use("/api/users/instructor", instructorRoutes);
+// Routes
+if (isProduction) {
+  // Production routes (for use with Ingress)
+  app.use("/api/users/auth", userRoutes);
+  app.use("/api/users/instructor", instructorRoutes);
+} else {
+  // Development routes (for use with API Gateway)
+  app.use("/auth", userRoutes);
+  app.use("/instructor", instructorRoutes);
+}
 
-const PORT = parseInt(process.env.PORT || "3000", 10);
-
+// 404 handler
 app.use("*", (req: Request, res: Response) => {
   res.status(404).json({
     success: false,
@@ -43,7 +55,10 @@ app.use("*", (req: Request, res: Response) => {
 });
 
 app.listen(PORT, async () => {
-  console.log(`Auth server is running on port ${PORT}`);
-
+  console.log(
+    `Auth server is running on port ${PORT} in ${
+      isProduction ? "production" : "development"
+    } mode`
+  );
   await dbConnections();
 });

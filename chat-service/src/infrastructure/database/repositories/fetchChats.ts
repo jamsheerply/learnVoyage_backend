@@ -21,7 +21,7 @@ export const fetchChats = async (
       path: "latestMessage.sender",
       select: "name pic email",
     });
-    console.log("populatedResults", JSON.stringify(populatedResults));
+    // console.log("populatedResults", JSON.stringify(populatedResults));
     // Convert the results to plain objects and cast them to chatEntity
     return populatedResults.map((result) => result.toObject() as chatEntity);
   } catch (error) {

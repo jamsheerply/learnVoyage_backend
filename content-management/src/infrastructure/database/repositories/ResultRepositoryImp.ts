@@ -142,4 +142,19 @@ export const ResultRepository: IResultRespository = {
       throw new Error(customError?.message);
     }
   },
+  updateResult: async (resultData) => {
+    try {
+      const { _id, ...rest } = resultData;
+      const updatedResult = await ResultModel.findByIdAndUpdate(_id, rest, {
+        new: true,
+      });
+      if (updatedResult) {
+        await updatedResult.populate("assessmentId");
+      }
+      return updatedResult;
+    } catch (error) {
+      const customError = error as CustomError;
+      throw new Error(customError?.message);
+    }
+  },
 };

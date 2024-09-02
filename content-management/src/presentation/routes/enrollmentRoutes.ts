@@ -10,6 +10,8 @@ import { readEnrollmentActivityController } from "../controllers/enrollment/read
 import { readRecentEnrollmentController } from "../controllers/enrollment/readRecentEnrollment";
 import { readTopCoursesController } from "../controllers/enrollment/readTopCourses";
 import { readCoursesStatusController } from "../controllers/enrollment/readCoursesStatus";
+import { readEnrollmentByInstructorIdController } from "../controllers/enrollment/readByInstructorId";
+import { readTotalRevenueController } from "../controllers/enrollment/readTotalRevenue";
 
 const router = Router();
 
@@ -28,6 +30,12 @@ router.get(
 );
 router.get("/read/top-courses", readTopCoursesController);
 router.get("/read/courses-status", jwtMiddleware, readCoursesStatusController);
+router.get(
+  "/read/total-enrollment",
+  jwtMiddleware,
+  readEnrollmentByInstructorIdController
+);
+router.get("/read/total-revenue", jwtMiddleware, readTotalRevenueController);
 router.get("/read/:id", jwtMiddleware, getEnrollmentByIdController);
 router.get(
   "/readby/:courseId",

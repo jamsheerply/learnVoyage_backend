@@ -1,6 +1,6 @@
 import amqp, { Channel, Connection, Message } from "amqplib/callback_api";
 import dotenv from "dotenv";
-// import { createUserHandler, exampleHandler } from "./handleRpc";
+import { createCourseHandler, createUserHandler } from "./handleRpc";
 dotenv.config();
 
 const RMQ_URL = process.env.RMQ_URL as string;
@@ -96,4 +96,5 @@ export const startConsumer = (queueName: string) => {
   connectWithRetry(queueName);
 };
 
-// registerHandler("createUser", createUserHandler);
+registerHandler("createUser", createUserHandler);
+registerHandler("createCourse", createCourseHandler);

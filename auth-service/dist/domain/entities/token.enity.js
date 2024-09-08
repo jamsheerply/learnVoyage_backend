@@ -1,2 +1,7 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+// import { ObjectId } from "mongoose";
+// export interface IToken {
+//   userId: ObjectId;
+//   token: string;
+//   createdAt: Date;
+// }

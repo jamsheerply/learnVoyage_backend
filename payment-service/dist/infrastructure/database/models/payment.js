@@ -6,10 +6,12 @@ const paymentSchema = new mongoose_1.Schema({
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
+        ref: "User",
     },
     courseId: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
+        ref: "Course",
     },
     method: {
         type: String,

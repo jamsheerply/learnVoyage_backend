@@ -33,20 +33,15 @@ const isProduction = process.env.NODE_ENV === "production";
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: [
-        "http://localhost:5173",
-        "https://learn-voyage-frontend.vercel.app",
-        "https://learn-voyage.jamsheerply.life",
-    ],
+    origin: [process.env.FRONTEND_URL],
     credentials: true,
     optionsSuccessStatus: 200,
 }));
-// Base path for routes
-const basePath = isProduction ? "/api/content-management" : "";
 // Health check route
-app.get(`${basePath}/health`, verifyToken_1.jwtMiddleware, (req, res) => {
+app.get("/api/content-management", verifyToken_1.jwtMiddleware, (req, res) => {
     res.status(200).json({
-        message: `Content Management service ON! Port: ${PORT}`,
+        message: `Content Management is healthy! Running on port: ${PORT}`,
+        environment: isProduction ? "production" : "development",
     });
 });
 // Apply routes
@@ -66,7 +61,7 @@ app.use("*", (req, res) => {
     });
 });
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`Content Management service is running on port ${PORT}`);
+    console.log(`🌱🌱🌱 Content Management is running on port ${PORT} in ${isProduction ? "🌟 production" : "🚧 development"} mode 🌱🌱🌱`);
     yield (0, dbConnections_1.default)();
     (0, consumerRpc_1.startConsumer)("content-management-service");
 }));

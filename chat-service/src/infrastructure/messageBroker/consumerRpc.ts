@@ -1,6 +1,11 @@
 import amqp, { Channel, Connection, Message } from "amqplib/callback_api";
 import dotenv from "dotenv";
-import { createUserHandler, exampleHandler } from "./handleRpc";
+import {
+  addToGroupChat,
+  createChatWithAdmin,
+  createGroupChat,
+  createUserHandler,
+} from "./handleRpc";
 dotenv.config();
 
 const RMQ_URL = process.env.RMQ_URL as string;
@@ -97,3 +102,6 @@ export const startConsumer = (queueName: string) => {
 };
 
 registerHandler("createUser", createUserHandler);
+registerHandler("createChatWithAdmin", createChatWithAdmin);
+registerHandler("createGroupChat", createGroupChat);
+registerHandler("addToGroupChat", addToGroupChat);

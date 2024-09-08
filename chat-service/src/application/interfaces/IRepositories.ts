@@ -49,4 +49,6 @@ export interface IRepositories {
   ) => Promise<messageEntity | null>;
 
   allMessageById: (chatId: string) => Promise<chatEntity[] | null>;
+
+  readGroupChatByName: (chatName: string) => Promise<chatEntity | null>;
 }

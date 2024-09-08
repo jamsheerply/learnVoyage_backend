@@ -4,3 +4,6 @@ export * from "./createSession";
 export * from "./getSessionById";
 export * from "./readPayment";
 export * from "./readPaymentTotalRevene";
+export * from "./downloadTransations";
+export * from "./createUser";
+export * from "./createCourse";

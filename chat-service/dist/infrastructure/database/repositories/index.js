@@ -24,3 +24,4 @@ __exportStar(require("./removeFromGroupChat"), exports);
 __exportStar(require("./searchUser"), exports);
 __exportStar(require("./createMessage"), exports);
 __exportStar(require("./allMessageById"), exports);
+__exportStar(require("./readGroupChatByName"), exports);

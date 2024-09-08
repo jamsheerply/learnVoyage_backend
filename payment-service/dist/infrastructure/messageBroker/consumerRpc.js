@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.startConsumer = exports.registerHandler = void 0;
 const callback_api_1 = __importDefault(require("amqplib/callback_api"));
 const dotenv_1 = __importDefault(require("dotenv"));
-// import { createUserHandler, exampleHandler } from "./handleRpc";
+const handleRpc_1 = require("./handleRpc");
 dotenv_1.default.config();
 const RMQ_URL = process.env.RMQ_URL;
 const handlers = {};
@@ -70,4 +70,5 @@ const startConsumer = (queueName) => {
     connectWithRetry(queueName);
 };
 exports.startConsumer = startConsumer;
-// registerHandler("createUser", createUserHandler);
+(0, exports.registerHandler)("createUser", handleRpc_1.createUserHandler);
+(0, exports.registerHandler)("createCourse", handleRpc_1.createCourseHandler);

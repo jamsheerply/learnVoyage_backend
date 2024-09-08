@@ -20,3 +20,6 @@ __exportStar(require("./createSessionUseCase"), exports);
 __exportStar(require("./getSessionByIdUseCase"), exports);
 __exportStar(require("./readPaymentUseCase"), exports);
 __exportStar(require("./readPaymentTotalRevenueUseCase"), exports);
+__exportStar(require("./downloadTransationsUseCase"), exports);
+__exportStar(require("./createUserUseCase"), exports);
+__exportStar(require("./createCourseUseCase"), exports);

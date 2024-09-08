@@ -31,7 +31,9 @@ exports.CategoryRepository = {
         });
     }),
     readByNameCategory: (categoryName) => __awaiter(void 0, void 0, void 0, function* () {
-        const categoryByName = yield categoryModel_1.default.findOne({ categoryName });
+        const categoryByName = yield categoryModel_1.default.findOne({
+            categoryName: { $regex: new RegExp(`^${categoryName}$`, "i") },
+        });
         if (!categoryByName) {
             return null;
         }

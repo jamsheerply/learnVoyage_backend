@@ -6,6 +6,7 @@ import errorHandler from "../_lib/common/errorhandler";
 import { dependencies } from "../_boot/dependencies";
 import database from "../_boot/database";
 import { paymentRoutes } from "../infrastructure/routes/paymentRoutes";
+import { startConsumer } from "../infrastructure/messageBroker/consumerRpc";
 
 dotenv.config();
 
@@ -17,23 +18,17 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://learn-voyage-frontend.vercel.app",
-      "https://learn-voyage.jamsheerply.life",
-    ],
+    origin: [process.env.FRONTEND_URL as string],
     credentials: true,
     optionsSuccessStatus: 200,
   })
 );
 
-// Base path for routes
-const basePath = isProduction ? "/api/payment-service" : "";
-
 // Health check route
-app.get("/api/payment-service/health", (req: Request, res: Response) => {
+app.get("/api/payment-service", (req: Request, res: Response) => {
   res.status(200).json({
-    message: `Payment service ON! Port: ${PORT}`,
+    message: `Payment service is healthy! Running on port: ${PORT}`,
+    environment: isProduction ? "production" : "development",
   });
 });
 
@@ -53,6 +48,11 @@ app.use("*", (req: Request, res: Response) => {
 });
 
 app.listen(PORT, async () => {
-  console.log(`connected to payment service : Port ${PORT}`);
+  console.log(
+    `🌱🌱🌱 payment server is running on port ${PORT} in ${
+      isProduction ? "🌟 production" : "🚧 development"
+    } mode 🌱🌱🌱`
+  );
   await database();
+  startConsumer("payment-service");
 });

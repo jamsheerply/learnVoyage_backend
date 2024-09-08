@@ -1,6 +1,9 @@
 import {
+  ICreateCourseUseCase,
   ICreatePaymentUseCase,
   ICreateSessionUseCase,
+  ICreateUserUseCase,
+  IDownloadTransationsUseCase,
   IGetSessionByIdUseCase,
   IReadPaymentTotalRevenueUseCase,
   IReadPaymentUseCase,
@@ -10,12 +13,19 @@ import {
 import { IDependencies } from "./IDependencies";
 
 export interface IUseCases {
-  createPaymentUseCase: (dependecies: IDependencies) => ICreatePaymentUseCase;
-  updatePaymentUseCase: (dependecies: IDependencies) => IUpdatePaymentUseCase;
-  createSessionUseCase: (dependecies: IDependencies) => ICreateSessionUseCase;
-  getSessionByIdUseCase: (dependecies: IDependencies) => IGetSessionByIdUseCase;
-  readPaymentUseCase: (dependecies: IDependencies) => IReadPaymentUseCase;
+  createPaymentUseCase: (dependencies: IDependencies) => ICreatePaymentUseCase;
+  updatePaymentUseCase: (dependencies: IDependencies) => IUpdatePaymentUseCase;
+  createSessionUseCase: (dependencies: IDependencies) => ICreateSessionUseCase;
+  getSessionByIdUseCase: (
+    dependencies: IDependencies
+  ) => IGetSessionByIdUseCase;
+  readPaymentUseCase: (dependencies: IDependencies) => IReadPaymentUseCase;
   readPaymentTotalRevenueUseCase: (
-    dependecies: IDependencies
+    dependencies: IDependencies
   ) => IReadPaymentTotalRevenueUseCase;
+  downloadTransationsUseCase: (
+    dependencies: IDependencies
+  ) => IDownloadTransationsUseCase;
+  createUserUserCase: (dependencies: IDependencies) => ICreateUserUseCase;
+  createCourseUseCase: (dependencies: IDependencies) => ICreateCourseUseCase;
 }

@@ -1,2 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+// import { IUser } from "../../entities/user.entity";
+// export interface ITokenService {
+//   generateToken(user: IUser): string;
+// }

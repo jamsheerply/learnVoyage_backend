@@ -27,8 +27,12 @@ const updatePaymentController = (dependencies) => {
                     type: "createEnrollment",
                     data: result,
                 }, (response) => {
-                    console.log("Response from content-management-service:", response);
-                    // Handle the response here
+                    console.log("Response from content-management-service:createEnrollmen::", response);
+                    (0, producerRpc_1.sendMessage)("chat-service", { type: "addToGroupChat", data: response }, (response) => {
+                        // Specify the type of response as any or more specific type if known
+                        console.log("Response from chat-service:", response);
+                        // Handle the response here
+                    });
                 });
             }
             return res.status(200).json({

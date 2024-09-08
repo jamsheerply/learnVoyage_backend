@@ -24,3 +24,4 @@ __exportStar(require("./removeFromGroupChatUseCase"), exports);
 __exportStar(require("./searchUserUseCase"), exports);
 __exportStar(require("./createMessageUseCase"), exports);
 __exportStar(require("./allMessageByIdUseCase"), exports);
+__exportStar(require("./readGroupChatByNameUseCase"), exports);

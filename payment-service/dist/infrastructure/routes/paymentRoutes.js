@@ -5,11 +5,13 @@ const express_1 = require("express");
 const controller_1 = require("../../presentation/controller");
 const paymentRoutes = (dependencies) => {
     const router = (0, express_1.Router)();
-    const { createPayment, updatePayment, readPayment, readPaymentTotalRevenue } = (0, controller_1.controllers)(dependencies);
+    const { createPayment, updatePayment, readPayment, readPaymentTotalRevenue, downloadTransationsPdf, downloadTransationsExcel, } = (0, controller_1.controllers)(dependencies);
     router.post("/create-payment", createPayment);
     router.post("/update-payment", updatePayment);
     router.get("/read-payment", readPayment);
     router.get("/read-total-revenue", readPaymentTotalRevenue);
+    router.get("/download/pdf", downloadTransationsPdf);
+    router.get("/download/xlsx", downloadTransationsExcel);
     return router;
 };
 exports.paymentRoutes = paymentRoutes;

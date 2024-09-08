@@ -29,14 +29,27 @@ exports.AssessmentRepository = {
     }),
     readAssessment: (queryData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { userId, page = 1, limit = 6, search = "" } = queryData;
+            const { userId, page = 1, limit = 6, search = "", category = [], instructor = [], } = queryData;
             let courseQuery = {};
             if (search) {
                 console.log("Search Term:", search);
                 courseQuery.courseName = { $regex: `^${search}`, $options: "i" };
             }
+            if (category.length > 0 && category[0] !== "All") {
+                console.log("Category Filter:", category);
+                const categoryIds = category[0].includes(",")
+                    ? category[0].split(",")
+                    : category;
+                courseQuery.categoryId = { $in: categoryIds };
+            }
+            if (instructor.length > 0) {
+                console.log("Instructor Filter:", instructor);
+                const instructorIds = instructor[0].includes(",")
+                    ? instructor[0].split(",")
+                    : instructor;
+                courseQuery.mentorId = { $in: instructorIds };
+            }
             const matchingCourseIds = yield courseModel_1.default.find(courseQuery).distinct("_id");
-            // Now query the Enrollment model
             let assessmentQuery;
             if (userId) {
                 assessmentQuery = {

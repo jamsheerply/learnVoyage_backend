@@ -46,7 +46,7 @@ export const createPaymentController = (dependencies: IDependencies) => {
 
         // Ensure coursePrice is properly handled
         const unitAmountInCents = coursePrice
-          ? Math.max(Math.floor(coursePrice * 100), 50)
+          ? Math.max(Math.floor(coursePrice * 100), 5000)
           : 0;
 
         const lineItem: Stripe.Checkout.SessionCreateParams.LineItem = {

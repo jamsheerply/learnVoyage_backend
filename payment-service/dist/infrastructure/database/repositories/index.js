@@ -20,3 +20,6 @@ __exportStar(require("./createSession"), exports);
 __exportStar(require("./getSessionById"), exports);
 __exportStar(require("./readPayment"), exports);
 __exportStar(require("./readPaymentTotalRevene"), exports);
+__exportStar(require("./downloadTransations"), exports);
+__exportStar(require("./createUser"), exports);
+__exportStar(require("./createCourse"), exports);

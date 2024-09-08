@@ -17,6 +17,12 @@ router.post(
   createCourseController
 );
 router.get("/read", readAllCourseController);
+router.get(
+  "/read-admin",
+  jwtMiddleware,
+  roleMiddleware("admin"),
+  readAllCourseController
+);
 router.get("/read-filer", jwtMiddleware, readCourseController);
 router.get(
   "/read/total-course",

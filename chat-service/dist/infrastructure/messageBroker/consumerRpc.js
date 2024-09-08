@@ -71,3 +71,6 @@ const startConsumer = (queueName) => {
 };
 exports.startConsumer = startConsumer;
 (0, exports.registerHandler)("createUser", handleRpc_1.createUserHandler);
+(0, exports.registerHandler)("createChatWithAdmin", handleRpc_1.createChatWithAdmin);
+(0, exports.registerHandler)("createGroupChat", handleRpc_1.createGroupChat);
+(0, exports.registerHandler)("addToGroupChat", handleRpc_1.addToGroupChat);

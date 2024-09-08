@@ -9,3 +9,4 @@ data:
   EMAIL: "learnvoyage2024@gmail.com"
   RMQ_URL: "amqps://rqbtlbqf:NbpGEmWqNbx5a-0XmYKweX-4TXwaum-v@puffin.rmq2.cloudamqp.com/rqbtlbqf"
   PASS: "ijwf xuuo mdbz aufu"
+  NODE_ENV: "production"

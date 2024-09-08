@@ -38,7 +38,7 @@ const createPaymentController = (dependencies) => {
                 const stripe = new stripe_1.default(process.env.STRIPE_SK);
                 // Ensure coursePrice is properly handled
                 const unitAmountInCents = coursePrice
-                    ? Math.max(Math.floor(coursePrice * 100), 50)
+                    ? Math.max(Math.floor(coursePrice * 100), 5000)
                     : 0;
                 const lineItem = {
                     price_data: {

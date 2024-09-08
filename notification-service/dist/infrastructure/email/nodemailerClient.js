@@ -26,7 +26,7 @@ const createNodemailerClient = () => {
         },
     });
     const send = (notification) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(notification);
+        console.log("notification", notification);
         const mailOptions = {
             from: process.env.EMAIL,
             to: notification.recipientEmail,
@@ -35,7 +35,7 @@ const createNodemailerClient = () => {
         };
         yield transporter.sendMail(mailOptions);
     });
-    console.log(JSON.stringify(send));
+    console.log("send", JSON.stringify(send));
     return { send };
 };
 exports.createNodemailerClient = createNodemailerClient;

@@ -8,3 +8,4 @@ export * from "./removeFromGroupChat";
 export * from "./searchUser";
 export * from "./createMessage";
 export * from "./allMessageById";
+export * from "./readGroupChatByName";

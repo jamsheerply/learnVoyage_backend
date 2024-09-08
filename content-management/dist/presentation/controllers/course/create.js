@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCourseController = void 0;
 const createCourseUseCase_1 = require("../../../application/useCases/course/createCourseUseCase");
 const CourseRepository_1 = require("../../../infrastructure/database/repositories/CourseRepository");
+const producerRpc_1 = require("../../../infrastructure/messageBroker/producerRpc");
 const createCourseController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newCourse = Object.assign({ id: "" }, req.body);
@@ -20,6 +21,18 @@ const createCourseController = (req, res) => __awaiter(void 0, void 0, void 0, f
             return res
                 .status(500)
                 .json({ success: false, error: "Failed to create course" });
+        }
+        else {
+            (0, producerRpc_1.sendMessage)("chat-service", { type: "createGroupChat", data: createdCourse }, (response) => {
+                // Specify the type of response as any or more specific type if known
+                console.log("Response from chat-service:", response);
+                // Handle the response here
+            });
+            (0, producerRpc_1.sendMessage)("payment-service", { type: "createCourse", data: createdCourse }, (response) => {
+                // Specify the type of response as any or more specific type if known
+                console.log("Response from content-management-service:", response);
+                // Handle the response here
+            });
         }
         return res.status(201).json({ success: true, data: createdCourse });
     }

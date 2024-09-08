@@ -8,7 +8,7 @@ export const readAssessementController = async (
   res: Response
 ) => {
   try {
-    const { page, limit, search } = req.query;
+    const { page, limit, search, category, instructor } = req.query;
 
     // Convert query parameters to the expected types
     const queryData = {
@@ -16,6 +16,16 @@ export const readAssessementController = async (
       page: parseInt(page as string, 10) || 1,
       limit: parseInt(limit as string, 10) || 10,
       search: (search as string) || undefined,
+      category: Array.isArray(category)
+        ? (category as string[])
+        : category
+        ? [category as string]
+        : [],
+      instructor: Array.isArray(instructor)
+        ? (instructor as string[])
+        : instructor
+        ? [instructor as string]
+        : [],
     };
     const readAssessment = await readAssessmentUseCase(AssessmentRepository)(
       queryData

@@ -20,16 +20,21 @@ const notificationRoutes_1 = __importDefault(require("../presentation/routes/not
 const consumerRpc_1 = require("../infrastructure/messageBroker/consumerRpc");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+const isProduction = process.env.NODE_ENV === "production";
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)());
-app.use("/", (req, res) => {
+app.use("/api/notification-service", (req, res) => {
     res.status(200).json({
-        success: false,
-        status: 200,
-        message: " notification is on ",
+        message: `notification service is healthy! Running on port: ${PORT}`,
+        environment: isProduction ? "production" : "development",
     });
 });
+app.use((0, cors_1.default)({
+    origin: [process.env.FRONTEND_URL],
+    credentials: true,
+    optionsSuccessStatus: 200,
+}));
 app.use("/api/notification", notificationRoutes_1.default);
 const PORT = process.env.PORT || 3003;
 app.use("*", (req, res) => {
@@ -40,6 +45,6 @@ app.use("*", (req, res) => {
     });
 });
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`notification-server is running on port ${PORT}`);
+    console.log(`🌱🌱🌱 notification-server is running on port ${PORT} in ${isProduction ? "🌟 production" : "🚧 development"} mode 🌱🌱🌱`);
     (0, consumerRpc_1.startConsumer)("notification-service");
 }));

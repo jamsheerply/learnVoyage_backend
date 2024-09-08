@@ -4,3 +4,6 @@ export * from "./IGetSessionUseCases";
 export * from "./ICreateSessionUseCase";
 export * from "./IReadPaymentUseCase";
 export * from "./IReadPaymentTotalRevenueUseCase";
+export * from "./IDownloadTransationsUseCase";
+export * from "./ICreateUserUseCase";
+export * from "./ICreateCourseUseCase";

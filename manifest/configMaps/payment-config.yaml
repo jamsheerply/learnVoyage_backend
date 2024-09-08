@@ -11,7 +11,7 @@ data:
   PASS: "ijwf xuuo mdbz aufu"
   STRIPE_SK: "sk_test_51PZ3biC85Qvu21M2GRfQhMiUH0wxV5a4YMa8BK6WVv6sJqGTHZBqu8vtVybWIDJp7Weur34mIKCtrYT5cUjkC7aB00kUBxh0k9"
   FRONTEND_URL: "https://jamsheerply.life"
-  BACKEND_URL: "http://localhost:3005"
   MONGODB_URI: "mongodb+srv://learnvoyage:learnvoyage123@learnvoyage.a3qrwmv.mongodb.net/payment-service?retryWrites=true&w=majority&appName=LearnVoyage"
   ACCESS_TOKEN_PRIVATE_KEY: "LearnVoyageAccessToken"
   REFRESH_TOKEN_PRIVATE_KEY: "LearnVoyageRefreshToken"
+  NODE_ENV: "production"

@@ -13,16 +13,17 @@ exports.readAllCourseController = void 0;
 const readAllCourseUseCase_1 = require("../../../application/useCases/course/readAllCourseUseCase");
 const CourseRepository_1 = require("../../../infrastructure/database/repositories/CourseRepository");
 const readAllCourseController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     try {
         const queryData = {
             page: parseInt(req.query.page),
             limit: parseInt(req.query.limit),
             search: req.query.search || "",
-            // sort: (req.query.sort as string) || "rating",
+            sort: req.query.sort || "rating_desc",
             category: ((_a = req.query.category) === null || _a === void 0 ? void 0 : _a.split(",")) || [],
             instructor: ((_b = req.query.instructor) === null || _b === void 0 ? void 0 : _b.split(",")) || [],
             price: ((_c = req.query.price) === null || _c === void 0 ? void 0 : _c.split(",")) || [],
+            userId: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id.toString(),
         };
         const readAllCourses = yield (0, readAllCourseUseCase_1.readAllCoursesUseCase)(CourseRepository_1.CourseRepository)(queryData);
         return res.status(200).json({ success: true, data: readAllCourses });

@@ -15,6 +15,7 @@ const readTotalCourse_1 = require("../controllers/course/readTotalCourse");
 const router = (0, express_1.Router)();
 router.post("/create", verifyToken_1.jwtMiddleware, (0, roleMiddleware_1.default)("instructor"), create_1.createCourseController);
 router.get("/read", readAll_1.readAllCourseController);
+router.get("/read-admin", verifyToken_1.jwtMiddleware, (0, roleMiddleware_1.default)("admin"), readAll_1.readAllCourseController);
 router.get("/read-filer", verifyToken_1.jwtMiddleware, read_1.readCourseController);
 router.get("/read/total-course", verifyToken_1.jwtMiddleware, readTotalCourse_1.readCourseTotalCoursesController);
 router.get("/read/:id", readById_1.readByIdCourseController);

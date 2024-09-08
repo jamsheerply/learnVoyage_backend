@@ -30,7 +30,6 @@ const readPaymentController = (dependencies) => {
                         ? [status]
                         : [],
             };
-            console.log(queryData);
             const result = yield readPaymentUseCase(dependencies).execute(queryData);
             return res.status(200).json({
                 success: true,

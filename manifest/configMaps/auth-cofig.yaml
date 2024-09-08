@@ -12,3 +12,4 @@ data:
   JWT_SECRET: "LearnVoyage"
   ACCESS_TOKEN_PRIVATE_KEY: "LearnVoyageAccessToken"
   REFRESH_TOKEN_PRIVATE_KEY: "LearnVoyageRefreshToken"
+  NODE_ENV: "production"

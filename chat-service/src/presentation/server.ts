@@ -21,29 +21,19 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://learn-voyage-frontend.vercel.app",
-      "https://learn-voyage.jamsheerply.life",
-    ],
+    origin: [process.env.FRONTEND_URL as string],
     credentials: true,
     optionsSuccessStatus: 200,
   })
 );
 
-// Base path for routes
-const basePath = isProduction ? "/api/chat-service" : "";
-
 // Health check route
-app.get(
-  `/api/chat-service/health`,
-  jwtMiddleware,
-  (req: Request, res: Response) => {
-    res.status(200).json({
-      message: `Chat service ON! Port: ${PORT}`,
-    });
-  }
-);
+app.get("/api/chat-service", jwtMiddleware, (req: Request, res: Response) => {
+  res.status(200).json({
+    message: `Chat service is healthy! Running on port: ${PORT}`,
+    environment: isProduction ? "production" : "development",
+  });
+});
 
 // Apply routes
 app.use("/api/chat-service", chatRoutes(dependencies));
@@ -59,7 +49,12 @@ app.use("*", (req: Request, res: Response) => {
 });
 
 const server = app.listen(PORT, async () => {
-  console.log(`Connected to chat service: Port ${PORT}`);
+  console.log(
+    `🌱🌱🌱 chat service is running on port ${PORT} in ${
+      isProduction ? "🌟 production" : "🚧 development"
+    } mode 🌱🌱🌱`
+  );
+
   await database();
   startConsumer("chat-service");
 });

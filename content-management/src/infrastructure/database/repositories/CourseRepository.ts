@@ -24,17 +24,45 @@ export const CourseRepository: ICourseRepository = {
       page = 1,
       limit = 5,
       search = "",
+      sort = "",
       category = [],
       instructor = [],
       price = [],
+      userId = "",
     } = queryData;
-    // console.log(JSON.stringify(queryData));
+
     let query = CourseModel.find();
+
+    if (userId !== "6694bc2c0b5eac20cf0f49c8") {
+      query = query
+        .where("lessons")
+        .exists(true)
+        .where("lessons.0")
+        .exists(true);
+    }
 
     // Unified Filter
     if (search) {
       query = query.where("courseName").regex(new RegExp(search, "i"));
     }
+
+    switch (sort) {
+      case "price_asc":
+        query = query.sort({ coursePrice: 1 });
+        break;
+      case "price_desc":
+        query = query.sort({ coursePrice: -1 });
+        break;
+      case "name_asc":
+        query = query.sort({ courseName: 1 });
+        break;
+      case "name_desc":
+        query = query.sort({ courseName: -1 });
+        break;
+      default:
+        query = query.sort({ createdAt: -1 });
+    }
+
     if (
       Array.isArray(category) &&
       category.length > 0 &&
@@ -63,10 +91,11 @@ export const CourseRepository: ICourseRepository = {
     }
 
     // Pagination
-    query = query.skip((page - 1) * limit).limit(limit);
+    const countQuery = CourseModel.countDocuments(query.getFilter());
+    const coursesQuery = query.skip((page - 1) * limit).limit(limit);
 
-    const courses = await query.exec();
-    const total = await CourseModel.countDocuments(query.getFilter());
+    const [total, courses] = await Promise.all([countQuery, coursesQuery]);
+
     return {
       total,
       page,
@@ -100,7 +129,6 @@ export const CourseRepository: ICourseRepository = {
   },
 
   updateCourse: async (course) => {
-    // console.log(course);
     const updatedCourse = await CourseModel.findByIdAndUpdate(
       course.id,
       course,
@@ -113,6 +141,7 @@ export const CourseRepository: ICourseRepository = {
     courseObject.id = courseObject._id.toString();
     return courseObject;
   },
+
   readCourse: async (queryData: {
     userId: string;
     page: number;
@@ -149,7 +178,6 @@ export const CourseRepository: ICourseRepository = {
 
       if (price.length > 0 && !price.includes("All")) {
         if (price.includes("Free") && price.includes("Paid")) {
-          // Do nothing, as it includes all prices
         } else if (price.includes("Free")) {
           courseQuery.coursePrice = 0;
         } else if (price.includes("Paid")) {

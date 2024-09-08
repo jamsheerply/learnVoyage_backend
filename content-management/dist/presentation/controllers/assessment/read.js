@@ -15,13 +15,23 @@ const AssessmentRepository_1 = require("../../../infrastructure/database/reposit
 const readAssessementController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {
-        const { page, limit, search } = req.query;
+        const { page, limit, search, category, instructor } = req.query;
         // Convert query parameters to the expected types
         const queryData = {
             userId: ((_a = req.user) === null || _a === void 0 ? void 0 : _a.role) !== "admin" ? (_b = req.user) === null || _b === void 0 ? void 0 : _b.id : "",
             page: parseInt(page, 10) || 1,
             limit: parseInt(limit, 10) || 10,
             search: search || undefined,
+            category: Array.isArray(category)
+                ? category
+                : category
+                    ? [category]
+                    : [],
+            instructor: Array.isArray(instructor)
+                ? instructor
+                : instructor
+                    ? [instructor]
+                    : [],
         };
         const readAssessment = yield (0, readAssessmentUseCase_1.readAssessmentUseCase)(AssessmentRepository_1.AssessmentRepository)(queryData);
         return res.status(200).json({ success: true, data: readAssessment });

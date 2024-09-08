@@ -28,6 +28,10 @@ const mongoose_1 = require("mongoose");
 const courseModel_1 = __importDefault(require("../models/courseModel"));
 const enrollmentModel_1 = require("../models/enrollmentModel");
 const resultModel_1 = require("../models/resultModel");
+// import { RateAndReviewModal } from "../models/rateAndReviewModel";
+// interface ActivityData {
+//   [key: string]: { date: string; enrollment?: number; exam?: number };
+// }
 exports.EnrollmentRepository = {
     createEnrollment: (enrollmentData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -58,7 +62,6 @@ exports.EnrollmentRepository = {
     readEnrollment: (queryData) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { userId, page = 1, limit = 10, search = "", category = [], instructor = [], price = [], } = queryData;
-            // console.log("Query Data:", JSON.stringify(queryData));
             // Start with a base query on the Course model
             let courseQuery = {};
             if (search) {
@@ -103,8 +106,6 @@ exports.EnrollmentRepository = {
                 .skip((page - 1) * limit)
                 .limit(limit)
                 .exec();
-            // console.log("Enrollments Found:", JSON.stringify(enrollments));
-            // console.log("Total Enrollments:", total);
             return {
                 total,
                 page,
@@ -485,6 +486,53 @@ exports.EnrollmentRepository = {
                 },
             ]);
             return totalRevenue[0].totalRevenue;
+        }
+        catch (error) {
+            const customError = error;
+            console.log("courseStatus", customError.message);
+            throw new Error(customError === null || customError === void 0 ? void 0 : customError.message);
+        }
+    }),
+    readTopEnrollments: (mentorId) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const result = yield courseModel_1.default.aggregate([
+                {
+                    $match: { mentorId },
+                },
+                {
+                    $lookup: {
+                        from: "enrollments",
+                        localField: "_id",
+                        foreignField: "courseId",
+                        as: "enrollments",
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "rateandreviews",
+                        localField: "_id",
+                        foreignField: "courseId",
+                        as: "commentsAndRatings",
+                    },
+                },
+                {
+                    $addFields: {
+                        numberOfEnrollments: { $size: "$enrollments" },
+                        numberOfComments: { $size: "$commentsAndRatings" },
+                        greatestRating: { $max: "$commentsAndRatings.rating" },
+                    },
+                },
+                {
+                    $project: {
+                        courseName: 1,
+                        numberOfEnrollments: 1,
+                        numberOfComments: 1,
+                        greatestRating: 1,
+                        coursePrice: 1,
+                    },
+                },
+            ]);
+            return result;
         }
         catch (error) {
             const customError = error;

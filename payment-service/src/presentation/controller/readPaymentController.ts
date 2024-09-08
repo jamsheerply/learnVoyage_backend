@@ -24,7 +24,7 @@ export const readPaymentController = (dependencies: IDependencies) => {
           ? [status as string]
           : [],
       };
-      console.log(queryData);
+
       const result = await readPaymentUseCase(dependencies).execute(queryData);
       return res.status(200).json({
         success: true,

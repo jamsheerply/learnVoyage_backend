@@ -49,7 +49,6 @@ const verifyToken = (token, secret) => {
 };
 const jwtMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.cookies);
         const { accessToken, refreshToken } = req.cookies;
         let user = null;
         if (accessToken) {

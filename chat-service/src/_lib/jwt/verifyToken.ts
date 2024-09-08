@@ -36,7 +36,6 @@ export const jwtMiddleware = async (
   next: NextFunction
 ): Promise<any> => {
   try {
-    console.log(req.cookies);
     const { accessToken, refreshToken } = req.cookies;
     let user: UserPayload | null = null;
     if (accessToken) {

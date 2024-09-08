@@ -24,8 +24,19 @@ export const updatePaymentController = (dependencies: IDependencies) => {
             data: result,
           },
           (response) => {
-            console.log("Response from content-management-service:", response);
-            // Handle the response here
+            console.log(
+              "Response from content-management-service:createEnrollmen::",
+              response
+            );
+            sendMessage(
+              "chat-service",
+              { type: "addToGroupChat", data: response },
+              (response: any) => {
+                // Specify the type of response as any or more specific type if known
+                console.log("Response from chat-service:", response);
+                // Handle the response here
+              }
+            );
           }
         );
       }

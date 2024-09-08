@@ -14,6 +14,7 @@ const readTopCourses_1 = require("../controllers/enrollment/readTopCourses");
 const readCoursesStatus_1 = require("../controllers/enrollment/readCoursesStatus");
 const readByInstructorId_1 = require("../controllers/enrollment/readByInstructorId");
 const readTotalRevenue_1 = require("../controllers/enrollment/readTotalRevenue");
+const readTopEnrollments_1 = require("../controllers/enrollment/readTopEnrollments");
 const router = (0, express_1.Router)();
 router.post("/create", verifyToken_1.jwtMiddleware, create_1.createEnrollmentController);
 router.get("/read", verifyToken_1.jwtMiddleware, read_1.readEnrollmentController);
@@ -23,6 +24,7 @@ router.get("/read/recent-enrollment", verifyToken_1.jwtMiddleware, readRecentEnr
 router.get("/read/top-courses", readTopCourses_1.readTopCoursesController);
 router.get("/read/courses-status", verifyToken_1.jwtMiddleware, readCoursesStatus_1.readCoursesStatusController);
 router.get("/read/total-enrollment", verifyToken_1.jwtMiddleware, readByInstructorId_1.readEnrollmentByInstructorIdController);
+router.get("/read/top-enrollment", verifyToken_1.jwtMiddleware, readTopEnrollments_1.readTopEnrollmentController);
 router.get("/read/total-revenue", verifyToken_1.jwtMiddleware, readTotalRevenue_1.readTotalRevenueController);
 router.get("/read/:id", verifyToken_1.jwtMiddleware, getById_1.getEnrollmentByIdController);
 router.get("/readby/:courseId", verifyToken_1.jwtMiddleware, getByCourseId_1.getEnrollmentByCourseIdController);

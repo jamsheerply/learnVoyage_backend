@@ -27,10 +27,14 @@ export const CategoryRepository: ICategoryRepository = {
   readByNameCategory: async (
     categoryName: string
   ): Promise<ICategory | null> => {
-    const categoryByName = await CategoryModel.findOne({ categoryName });
+    const categoryByName = await CategoryModel.findOne({
+      categoryName: { $regex: new RegExp(`^${categoryName}$`, "i") },
+    });
+
     if (!categoryByName) {
       return null;
     }
+
     const categoryObject = categoryByName.toObject() as ICategoryWithId;
     categoryObject.id = categoryObject._id.toString();
     return categoryObject;

@@ -73,6 +73,12 @@ const signupController = (req, res) => __awaiter(void 0, void 0, void 0, functio
             sameSite: "strict",
             secure: true,
         });
+        // create-user in chat
+        (0, producerRpc_1.sendMessage)("chat-service", { type: "createUser", data: createdUser }, (response) => {
+            // Specify the type of response as any or more specific type if known
+            console.log("Response from content-management-service:", response);
+            // Handle the response here
+        });
         return res.status(201).json({ success: true, data: accessToken });
     }
     catch (error) {
@@ -98,14 +104,6 @@ const verifyOtpController = (req, res) => __awaiter(void 0, void 0, void 0, func
         if (!user) {
             return res.status(500).json({ success: false, error: "User not found" });
         }
-        // const accessTokenService = generateAccessTokenService(
-        //   process.env.ACCESS_TOKEN_PRIVATE_KEY!
-        // );
-        // const refreshTokenService = generateRefreshTokenService(
-        //   process.env.REFRESH_TOKEN_PRIVATE_KEY!
-        // );
-        // const accessToken = accessTokenService.generateToken(user);
-        // const refreshtoken = await refreshTokenService.generateToken(user);
         const accessToken = (0, generateAccessToken_1.generateAccessToken)(user);
         const refreshToken = (0, generateRefreshToken_1.generateRefreshToken)(user);
         console.log(accessToken);
@@ -122,8 +120,13 @@ const verifyOtpController = (req, res) => __awaiter(void 0, void 0, void 0, func
             sameSite: "strict",
             secure: true,
         });
-        // create-user in chat
-        (0, producerRpc_1.sendMessage)("chat-service", { type: "createUser", data: user }, (response) => {
+        //create-chatWithAdmin
+        (0, producerRpc_1.sendMessage)("chat-service", { type: "createChatWithAdmin", data: user.id }, (response) => {
+            // Specify the type of response as any or more specific type if known
+            console.log("Response from content-management-service:", response);
+            // Handle the response here
+        });
+        (0, producerRpc_1.sendMessage)("payment-service", { type: "createUser", data: user }, (response) => {
             // Specify the type of response as any or more specific type if known
             console.log("Response from content-management-service:", response);
             // Handle the response here

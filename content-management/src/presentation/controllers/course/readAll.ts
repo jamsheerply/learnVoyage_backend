@@ -9,10 +9,11 @@ export const readAllCourseController = async (req: Request, res: Response) => {
       page: parseInt(req.query.page as string),
       limit: parseInt(req.query.limit as string),
       search: (req.query.search as string) || "",
-      // sort: (req.query.sort as string) || "rating",
+      sort: (req.query.sort as string) || "rating_desc",
       category: (req.query.category as string)?.split(",") || [],
       instructor: (req.query.instructor as string)?.split(",") || [],
       price: (req.query.price as string)?.split(",") || [],
+      userId: req.user?.id.toString()!,
     };
 
     const readAllCourses = await readAllCoursesUseCase(CourseRepository)(

@@ -124,6 +124,45 @@ exports.UserRepository = {
             throw new Error(customError === null || customError === void 0 ? void 0 : customError.message);
         }
     }),
+    readAllRole: (queryData) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { role, page = 1, limit = 10, search = "", filter = "", } = queryData;
+            let userQuery = { role, isVerified: true };
+            if (search) {
+                userQuery.$or = [
+                    { firstName: { $regex: search, $options: "i" } },
+                    { lastName: { $regex: search, $options: "i" } },
+                    { email: { $regex: search, $options: "i" } },
+                ];
+            }
+            if (filter === "blocked") {
+                userQuery.isBlocked = true;
+            }
+            else if (filter === "unblocked") {
+                userQuery.isBlocked = false;
+            }
+            const total = yield userModel_1.default.countDocuments(userQuery);
+            const users = yield userModel_1.default.find(userQuery)
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .exec();
+            return {
+                total,
+                page,
+                limit,
+                users,
+            };
+        }
+        catch (error) {
+            console.error("Error in readAllRole:", error);
+            if (error instanceof Error) {
+                throw new Error(`Failed to read users: ${error.message}`);
+            }
+            else {
+                throw new Error("An unknown error occurred while reading users");
+            }
+        }
+    }),
     // readTopInstructors:async()=>{
     //   try {
     //   } catch (error) {

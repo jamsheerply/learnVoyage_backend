@@ -11,6 +11,7 @@ export const createCategoryUseCase = (
     if (existingCategory) {
       throw new Error("Category already exists");
     }
+
     const newCategory = await categoryRepository.createCategory(categoryData);
     return newCategory;
   };

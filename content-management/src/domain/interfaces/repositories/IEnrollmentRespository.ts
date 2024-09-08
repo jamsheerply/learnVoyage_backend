@@ -40,4 +40,13 @@ export interface IEnrollmentRepository {
   readCourseStatus(): Promise<EnrollmentEntity[] | null>;
   readByInstructorId(mentorId: string): Promise<number | null>;
   readTotalRevenue(mentorId: string): Promise<number | null>;
+  readTopEnrollments(mentorId: string): Promise<
+    {
+      courseName: number;
+      numberOfEnrollments: number;
+      numberOfComments: number | null;
+      greatestRating: number | null;
+      coursePrice: number;
+    }[]
+  >;
 }

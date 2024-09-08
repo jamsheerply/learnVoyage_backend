@@ -18,5 +18,17 @@ export interface IUserRepository {
     totalStudents: number;
     totalIntructors: number;
   }>;
+  readAllRole(queryData: {
+    role: string;
+    page: number;
+    limit: number;
+    search?: string;
+    filter?: string;
+  }): Promise<{
+    total: number;
+    page: number;
+    limit: number;
+    users: IUser[];
+  }>;
   // readTopInstructors(): Promise<IUser | null>;
 }

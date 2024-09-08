@@ -6,7 +6,6 @@ import BcryptHashingService from "../../infrastructure/security/bcrypt";
 import { signupUseCase } from "../../application/useCases/signupUseCase";
 import { verifyOtpUseCase } from "../../application/useCases/verifyOtpUseCase";
 import { IUser } from "../../domain/entities/user.entity";
-import { TokenRepository } from "../../infrastructure/database/repositories/TokenRepository";
 import { sendMessage } from "../../infrastructure/messageBroker/producerRpc";
 
 export const signupController = async (req: Request, res: Response) => {
@@ -72,6 +71,16 @@ export const signupController = async (req: Request, res: Response) => {
       secure: true,
     });
 
+    // create-user in chat
+    sendMessage(
+      "chat-service",
+      { type: "createUser", data: createdUser },
+      (response: any) => {
+        // Specify the type of response as any or more specific type if known
+        console.log("Response from content-management-service:", response);
+        // Handle the response here
+      }
+    );
     return res.status(201).json({ success: true, data: accessToken });
   } catch (error: any) {
     if (error.message === "Email already exists") {
@@ -100,16 +109,6 @@ export const verifyOtpController = async (req: Request, res: Response) => {
       return res.status(500).json({ success: false, error: "User not found" });
     }
 
-    // const accessTokenService = generateAccessTokenService(
-    //   process.env.ACCESS_TOKEN_PRIVATE_KEY!
-    // );
-    // const refreshTokenService = generateRefreshTokenService(
-    //   process.env.REFRESH_TOKEN_PRIVATE_KEY!
-    // );
-
-    // const accessToken = accessTokenService.generateToken(user);
-    // const refreshtoken = await refreshTokenService.generateToken(user);
-
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
@@ -130,9 +129,19 @@ export const verifyOtpController = async (req: Request, res: Response) => {
       secure: true,
     });
 
-    // create-user in chat
+    //create-chatWithAdmin
     sendMessage(
       "chat-service",
+      { type: "createChatWithAdmin", data: user.id },
+      (response: any) => {
+        // Specify the type of response as any or more specific type if known
+        console.log("Response from content-management-service:", response);
+        // Handle the response here
+      }
+    );
+
+    sendMessage(
+      "payment-service",
       { type: "createUser", data: user },
       (response: any) => {
         // Specify the type of response as any or more specific type if known

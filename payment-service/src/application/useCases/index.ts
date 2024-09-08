@@ -4,3 +4,6 @@ export * from "./createSessionUseCase";
 export * from "./getSessionByIdUseCase";
 export * from "./readPaymentUseCase";
 export * from "./readPaymentTotalRevenueUseCase";
+export * from "./downloadTransationsUseCase";
+export * from "./createUserUseCase";
+export * from "./createCourseUseCase";

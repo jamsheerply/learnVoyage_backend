@@ -16,25 +16,19 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://learn-voyage-frontend.vercel.app",
-      "https://learn-voyage.jamsheerply.life",
-    ],
+    origin: [process.env.FRONTEND_URL as string],
     credentials: true,
     optionsSuccessStatus: 200,
   })
 );
 
 // Health check route
-app.get("/api/users", (req: Request, res: Response) => {
+app.get("/api/users/", (req: Request, res: Response) => {
   res.status(200).json({
     message: `Auth service is healthy! Running on port: ${PORT}`,
     environment: isProduction ? "production" : "development",
   });
 });
-
-// Routes
 
 // Production routes (for use with Ingress)
 app.use("/api/users/auth", userRoutes);
@@ -51,9 +45,10 @@ app.use("*", (req: Request, res: Response) => {
 
 app.listen(PORT, async () => {
   console.log(
-    `Auth server is running on port ${PORT} in ${
-      isProduction ? "production" : "development"
-    } mode`
+    `🌱🌱🌱 Auth server is running on port ${PORT} in ${
+      isProduction ? "🌟 production" : "🚧 development"
+    } mode 🌱🌱🌱`
   );
+
   await dbConnections();
 });

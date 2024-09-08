@@ -1,5 +1,8 @@
+import { courseEntity } from "../../domain/entities/courseEntity";
 import { paymentEntity } from "../../domain/entities/paymentEntity";
+import { paymentEntityPop } from "../../domain/entities/paymentEntityPop";
 import { sessionEntity } from "../../domain/entities/sessionEntity";
+import { userEntity } from "../../domain/entities/userEntity";
 
 export interface IRepositories {
   createPayment: (data: paymentEntity) => Promise<paymentEntity | null>;
@@ -19,4 +22,10 @@ export interface IRepositories {
     payments: paymentEntity[];
   } | null>;
   readPaymentTotalRevene: () => Promise<{ totalRevenue: number } | null>;
+  downloadTransations: (
+    startDate: string,
+    endDate: string
+  ) => Promise<paymentEntityPop[] | null>;
+  createUser: (data: userEntity) => Promise<userEntity | null>;
+  createCourse: (data: courseEntity) => Promise<courseEntity | null>;
 }

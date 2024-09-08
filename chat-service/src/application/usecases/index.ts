@@ -8,3 +8,4 @@ export * from "./removeFromGroupChatUseCase";
 export * from "./searchUserUseCase";
 export * from "./createMessageUseCase";
 export * from "./allMessageByIdUseCase";
+export * from "./readGroupChatByNameUseCase";

@@ -5,6 +5,7 @@ import { IcreatGroupChatUseCase } from "../../domain/useCaseInterfaces/ICreateGr
 import { ICreateMessageUseCase } from "../../domain/useCaseInterfaces/ICreateMessageUseCase";
 import { ICreateUserUseCase } from "../../domain/useCaseInterfaces/ICreateUserUseCase";
 import { IFetchChatUseCase } from "../../domain/useCaseInterfaces/IFetchChatsUseCase";
+import { IReadGroupChatByNameUseCase } from "../../domain/useCaseInterfaces/IReadGroupChatByNameUseCase";
 import { IRemoveFromGroupChatUseCase } from "../../domain/useCaseInterfaces/IRemoveFromGroupChatUseCase";
 import { ISearchUserUseCase } from "../../domain/useCaseInterfaces/ISearchUserUseCase";
 import { IUpdateChatById } from "../../domain/useCaseInterfaces/IUpdateChatByIdUseCase";
@@ -29,4 +30,7 @@ export interface IUseCase {
   allMessageByIdUseCase: (
     dependencies: IDependencies
   ) => IAllMessageByIdUseCase;
+  readGroupChatByNameUseCase: (
+    dependencies: IDependencies
+  ) => IReadGroupChatByNameUseCase;
 }

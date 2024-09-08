@@ -1,3 +1,4 @@
+import { PipelineStage } from "mongoose";
 import { paymentEntity } from "../../../domain/entities/paymentEntity";
 import { PaymentModel } from "../models";
 
@@ -22,37 +23,103 @@ export const readPayment = async (queryData: {
       status = [],
     } = queryData;
 
-    let paymentQuery: any = {};
+    const pipeline: PipelineStage[] = [];
 
-    // Apply search filter
+    // Lookup stage to populate courseId
+    pipeline.push({
+      $lookup: {
+        from: "courses",
+        localField: "courseId",
+        foreignField: "_id",
+        as: "course",
+      },
+    });
+
+    // Unwind the course array
+    pipeline.push({ $unwind: "$course" });
+
+    // Lookup stage to populate userId
+    pipeline.push({
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "user",
+      },
+    });
+
+    // Unwind the user array
+    pipeline.push({ $unwind: "$user" });
+
+    // Lookup stage to populate mentorId
+    pipeline.push({
+      $lookup: {
+        from: "users",
+        localField: "course.mentorId",
+        foreignField: "_id",
+        as: "mentor",
+      },
+    });
+
+    // Unwind the mentor array (use preserveNullAndEmptyArrays to keep payments even if they don't have a mentor)
+    pipeline.push({
+      $unwind: {
+        path: "$mentor",
+        preserveNullAndEmptyArrays: true,
+      },
+    });
+
+    // Match stage
+    const matchStage: PipelineStage.Match["$match"] = {};
     if (search) {
-      //   paymentQuery.$or = [
-      //     { method: { $regex: search, $options: "i" } },
-      //     { status: { $regex: search, $options: "i" } },
-      //     { amount: { $regex: search, $options: "i" } },
-      //   ];
+      matchStage.$or = [
+        { "course.courseName": { $regex: search, $options: "i" } },
+        { "mentor.firstName": { $regex: search, $options: "i" } },
+      ];
     }
-
-    // Apply method filter
     if (method.length > 0) {
-      if (!(method.includes("card") && method.includes("upi"))) {
-        paymentQuery.method = { $in: method };
-      }
+      matchStage.method = { $in: method };
     }
-
-    // Apply status filter
     if (status.length > 0) {
-      paymentQuery.status = { $in: status };
+      matchStage.status = { $in: status };
+    }
+    if (Object.keys(matchStage).length > 0) {
+      pipeline.push({ $match: matchStage });
     }
 
-    // Count total documents that match the query
-    const total = await PaymentModel.countDocuments(paymentQuery);
+    // Count total documents
+    const countPipeline = [...pipeline, { $count: "total" }];
+    const totalResult = await PaymentModel.aggregate(countPipeline);
+    const total = totalResult.length > 0 ? totalResult[0].total : 0;
 
-    // Fetch payments with pagination
-    const payments = await PaymentModel.find(paymentQuery)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
+    // Add pagination
+    pipeline.push({ $skip: (page - 1) * limit } as PipelineStage.Skip);
+    pipeline.push({ $limit: limit } as PipelineStage.Limit);
+
+    // Sort
+    pipeline.push({ $sort: { createdAt: -1 } } as PipelineStage.Sort);
+
+    // Project stage to reshape the output
+    pipeline.push({
+      $project: {
+        _id: 1,
+        userId: "$user._id",
+        userFirstName: "$user.firstName",
+        userLastName: "$user.lastName",
+        courseId: "$course._id",
+        courseName: "$course.courseName",
+        courseThumbnailUrl: "$course.courseThumbnailUrl",
+        mentorId: "$mentor._id",
+        mentorFirstName: "$mentor.firstName",
+        mentorLastName: "$mentor.lastName",
+        method: 1,
+        status: 1,
+        amount: 1,
+        createdAt: 1,
+      },
+    });
+
+    const payments = await PaymentModel.aggregate(pipeline);
 
     return {
       total,

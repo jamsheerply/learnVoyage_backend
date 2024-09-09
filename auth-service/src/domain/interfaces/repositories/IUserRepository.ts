@@ -14,9 +14,9 @@ export interface IUserRepository {
   editInstructor(id: string, isBlocked: boolean): Promise<IUser[]>;
   getProfileById(id: string): Promise<userEntity | null>;
   updateProfile(userData: userEntity): Promise<userEntity | null>;
-  readTotalStudentsAndInstructors(): Promise<{
+  readTotalStudentsAndInstructors: () => Promise<{
     totalStudents: number;
-    totalIntructors: number;
+    totalInstructors: number;
   }>;
   readAllRole(queryData: {
     role: string;

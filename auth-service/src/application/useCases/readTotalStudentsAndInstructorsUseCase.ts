@@ -6,7 +6,7 @@ export const readTotalStudnetAndInstructorUseCase = (
 ) => {
   return async (): Promise<{
     totalStudents: number;
-    totalIntructors: number;
+    totalInstructors: number;
   }> => {
     try {
       const totalStudnetsAndInstructors =

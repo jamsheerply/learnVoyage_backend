@@ -103,10 +103,23 @@ export const UserRepository: IUserRepository = {
           },
         },
       ]);
+
       console.log("readUser", readUser);
+
+      let totalInstructors = 0;
+      let totalStudents = 0;
+
+      readUser.forEach((item) => {
+        if (item._id === "instructor") {
+          totalInstructors = item.total;
+        } else if (item._id === "student") {
+          totalStudents = item.total;
+        }
+      });
+
       return {
-        totalIntructors: readUser[0].total,
-        totalStudents: readUser[1].total,
+        totalInstructors,
+        totalStudents,
       };
     } catch (error) {
       const customError = error as CustomError;

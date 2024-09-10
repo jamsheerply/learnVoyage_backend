@@ -4,18 +4,14 @@ import cookieParser from "cookie-parser";
 import proxy from "express-http-proxy";
 import dotenv from "dotenv";
 
-// Load environment variables
 dotenv.config();
 
-// Constants
 const PORT: number = Number(process.env.PORT) || 3000;
 const ALLOWED_ORIGINS: string[] = [process.env.FRONTEND_URL as string];
 
-// Initialize Express app
 const app: Application = express();
 const isProduction = process.env.NODE_ENV === "production";
 
-// Middleware
 app.use(cookieParser());
 app.use(
   cors({
@@ -25,16 +21,21 @@ app.use(
   })
 );
 
-// Proxy routes configuration
 const proxyRoutes = [
-  { pathRegex: /^\/api\/users/, target: "http://localhost:3001" },
-  { pathRegex: /^\/api\/chat-service/, target: "http://localhost:3002" },
-  { pathRegex: /^\/api\/content-management/, target: "http://localhost:3003" },
+  { pathRegex: /^\/api\/users/, target: process.env.USERS_URL },
+  { pathRegex: /^\/api\/chat-service/, target: process.env.CHAT_SERVICE_URL },
+  {
+    pathRegex: /^\/api\/content-management/,
+    target: process.env.CONTENT_MANAGEMENT_URL,
+  },
   {
     pathRegex: /^\/api\/notification-service/,
-    target: "http://localhost:3004",
+    target: process.env.NOTIFICATIONS_SERVICE_URL,
   },
-  { pathRegex: /^\/api\/payment-service/, target: "http://localhost:3005" },
+  {
+    pathRegex: /^\/api\/payment-service/,
+    target: process.env.PAYMENT_SERVICE_URL,
+  },
 ];
 
 app.get("/", (req: Request, res: Response) => {
@@ -44,21 +45,18 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-// Proxy middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   const route = proxyRoutes.find((route) => route.pathRegex.test(req.path));
   if (route) {
-    return proxy(route.target)(req, res, next);
+    return proxy(route.target as string)(req, res, next);
   }
   next();
 });
 
-// Default route
 app.use((req: Request, res: Response) => {
   res.status(404).send("Not Found");
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(
     `🌱🌱🌱 API Gateway is running on port ${PORT} in ${

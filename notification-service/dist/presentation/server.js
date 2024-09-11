@@ -44,7 +44,23 @@ app.use("*", (req, res) => {
         message: "Api Not found notification",
     });
 });
-app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
+const server = app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`🌱🌱🌱 notification-server is running on port ${PORT} in ${isProduction ? "🌟 production" : "🚧 development"} mode 🌱🌱🌱`);
     (0, consumerRpc_1.startConsumer)("notification-service");
 }));
+// Handle SIGTERM for graceful shutdown
+process.on("SIGTERM", () => {
+    console.log("Received SIGTERM, shutting down gracefully...");
+    server.close(() => {
+        console.log("Closed remaining connections");
+        process.exit(0);
+    });
+});
+// Optional: Handle other termination signals like SIGINT (Ctrl+C)
+process.on("SIGINT", () => {
+    console.log("Received SIGINT, shutting down gracefully...");
+    server.close(() => {
+        console.log("Closed remaining connections");
+        process.exit(0);
+    });
+});

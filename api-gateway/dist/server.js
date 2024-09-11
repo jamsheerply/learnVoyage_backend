@@ -51,6 +51,23 @@ app.use((req, res, next) => {
 app.use((req, res) => {
     res.status(404).send("Not Found");
 });
-app.listen(PORT, () => {
+// Start the server and store the instance in a variable
+const server = app.listen(PORT, () => {
     console.log(`🌱🌱🌱 API Gateway is running on port ${PORT} in ${isProduction ? "🌟 production" : "🚧 development"} mode 🌱🌱🌱`);
+});
+// Handle SIGTERM for graceful shutdown
+process.on("SIGTERM", () => {
+    console.log("Received SIGTERM, shutting down gracefully...");
+    server.close(() => {
+        console.log("Closed remaining connections");
+        process.exit(0);
+    });
+});
+// Optional: Handle other termination signals like SIGINT (Ctrl+C)
+process.on("SIGINT", () => {
+    console.log("Received SIGINT, shutting down gracefully...");
+    server.close(() => {
+        console.log("Closed remaining connections");
+        process.exit(0);
+    });
 });

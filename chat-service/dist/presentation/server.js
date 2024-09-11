@@ -21,7 +21,6 @@ const consumerRpc_1 = require("../infrastructure/messageBroker/consumerRpc");
 const dependencies_1 = require("../_boot/dependencies");
 const chatRoutes_1 = require("../infrastructure/routes/chatRoutes");
 const errorhandler_1 = __importDefault(require("../_lib/common/errorhandler"));
-const verifyToken_1 = require("../_lib/jwt/verifyToken");
 const messageRoutes_1 = require("../infrastructure/routes/messageRoutes");
 const socket_io_1 = require("socket.io");
 dotenv_1.default.config();
@@ -36,7 +35,7 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
 }));
 // Health check route
-app.get("/api/chat-service", verifyToken_1.jwtMiddleware, (req, res) => {
+app.get("/api/chat-service", (req, res) => {
     res.status(200).json({
         message: `Chat service is healthy! Running on port: ${PORT}`,
         environment: isProduction ? "production" : "development",
@@ -48,9 +47,11 @@ app.use("/api/chat-service", (0, messageRoutes_1.messageRoutes)(dependencies_1.d
 app.use(errorhandler_1.default);
 // 404 handler
 app.use("*", (req, res) => {
-    res
-        .status(404)
-        .json({ success: false, status: 404, message: "API Not found" });
+    res.status(404).json({
+        success: false,
+        status: 404,
+        message: "API Not found in chat-service",
+    });
 });
 const server = app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`🌱🌱🌱 chat service is running on port ${PORT} in ${isProduction ? "🌟 production" : "🚧 development"} mode 🌱🌱🌱`);
@@ -96,4 +97,20 @@ io.on("connection", (socket) => {
     //   console.log("User disconnected");
     //   // Additional cleanup if needed
     // });
+});
+// Handle SIGTERM for graceful shutdown
+process.on("SIGTERM", () => {
+    console.log("Received SIGTERM, shutting down gracefully...");
+    server.close(() => {
+        console.log("Closed remaining connections");
+        process.exit(0);
+    });
+});
+// Optional: Handle other termination signals like SIGINT (Ctrl+C)
+process.on("SIGINT", () => {
+    console.log("Received SIGINT, shutting down gracefully...");
+    server.close(() => {
+        console.log("Closed remaining connections");
+        process.exit(0);
+    });
 });

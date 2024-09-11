@@ -113,7 +113,6 @@ exports.UserRepository = {
                     },
                 },
             ]);
-            console.log("readUser", readUser);
             let totalInstructors = 0;
             let totalStudents = 0;
             readUser.forEach((item) => {

@@ -43,7 +43,7 @@ app.use("*", (req: Request, res: Response) => {
   });
 });
 
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
   console.log(
     `🌱🌱🌱 Auth server is running on port ${PORT} in ${
       isProduction ? "🌟 production" : "🚧 development"
@@ -51,4 +51,22 @@ app.listen(PORT, async () => {
   );
 
   await dbConnections();
+});
+
+// Handle SIGTERM for graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("Received SIGTERM, shutting down gracefully...");
+  server.close(() => {
+    console.log("Closed remaining connections");
+    process.exit(0);
+  });
+});
+
+// Optional: Handle other termination signals like SIGINT (Ctrl+C)
+process.on("SIGINT", () => {
+  console.log("Received SIGINT, shutting down gracefully...");
+  server.close(() => {
+    console.log("Closed remaining connections");
+    process.exit(0);
+  });
 });

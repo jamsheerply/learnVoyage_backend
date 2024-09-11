@@ -24,7 +24,6 @@ const assessmentRoutes_1 = __importDefault(require("./routes/assessmentRoutes"))
 const resultRoutes_1 = __importDefault(require("./routes/resultRoutes"));
 const rateAndReviewRoutes_1 = __importDefault(require("./routes/rateAndReviewRoutes"));
 const consumerRpc_1 = require("../infrastructure/messageBroker/consumerRpc");
-const verifyToken_1 = require("../infrastructure/jwt/verifyToken");
 const videoStreaming_1 = __importDefault(require("./controllers/streaming/videoStreaming"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -38,7 +37,7 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
 }));
 // Health check route
-app.get("/api/content-management", verifyToken_1.jwtMiddleware, (req, res) => {
+app.get("/api/content-management", (req, res) => {
     res.status(200).json({
         message: `Content Management is healthy! Running on port: ${PORT}`,
         environment: isProduction ? "production" : "development",
@@ -60,8 +59,24 @@ app.use("*", (req, res) => {
         message: "API Not found in content management service",
     });
 });
-app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
+const server = app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`🌱🌱🌱 Content Management is running on port ${PORT} in ${isProduction ? "🌟 production" : "🚧 development"} mode 🌱🌱🌱`);
     yield (0, dbConnections_1.default)();
     (0, consumerRpc_1.startConsumer)("content-management-service");
 }));
+// Handle SIGTERM for graceful shutdown
+process.on("SIGTERM", () => {
+    console.log("Received SIGTERM, shutting down gracefully...");
+    server.close(() => {
+        console.log("Closed remaining connections");
+        process.exit(0);
+    });
+});
+// Optional: Handle other termination signals like SIGINT (Ctrl+C)
+process.on("SIGINT", () => {
+    console.log("Received SIGINT, shutting down gracefully...");
+    server.close(() => {
+        console.log("Closed remaining connections");
+        process.exit(0);
+    });
+});

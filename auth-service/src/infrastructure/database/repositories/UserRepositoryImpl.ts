@@ -104,8 +104,6 @@ export const UserRepository: IUserRepository = {
         },
       ]);
 
-      console.log("readUser", readUser);
-
       let totalInstructors = 0;
       let totalStudents = 0;
 

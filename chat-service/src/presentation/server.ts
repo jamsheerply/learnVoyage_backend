@@ -7,7 +7,6 @@ import { startConsumer } from "../infrastructure/messageBroker/consumerRpc";
 import { dependencies } from "../_boot/dependencies";
 import { chatRoutes } from "../infrastructure/routes/chatRoutes";
 import errorHandler from "../_lib/common/errorhandler";
-import { jwtMiddleware } from "../_lib/jwt/verifyToken";
 import { messageRoutes } from "../infrastructure/routes/messageRoutes";
 import { Server } from "socket.io";
 
@@ -28,7 +27,7 @@ app.use(
 );
 
 // Health check route
-app.get("/api/chat-service", jwtMiddleware, (req: Request, res: Response) => {
+app.get("/api/chat-service", (req: Request, res: Response) => {
   res.status(200).json({
     message: `Chat service is healthy! Running on port: ${PORT}`,
     environment: isProduction ? "production" : "development",
@@ -43,9 +42,11 @@ app.use(errorHandler);
 
 // 404 handler
 app.use("*", (req: Request, res: Response) => {
-  res
-    .status(404)
-    .json({ success: false, status: 404, message: "API Not found" });
+  res.status(404).json({
+    success: false,
+    status: 404,
+    message: "API Not found in chat-service",
+  });
 });
 
 const server = app.listen(PORT, async () => {
@@ -103,4 +104,22 @@ io.on("connection", (socket) => {
   //   console.log("User disconnected");
   //   // Additional cleanup if needed
   // });
+});
+
+// Handle SIGTERM for graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("Received SIGTERM, shutting down gracefully...");
+  server.close(() => {
+    console.log("Closed remaining connections");
+    process.exit(0);
+  });
+});
+
+// Optional: Handle other termination signals like SIGINT (Ctrl+C)
+process.on("SIGINT", () => {
+  console.log("Received SIGINT, shutting down gracefully...");
+  server.close(() => {
+    console.log("Closed remaining connections");
+    process.exit(0);
+  });
 });

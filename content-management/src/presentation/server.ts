@@ -10,7 +10,6 @@ import assessmentRoutes from "./routes/assessmentRoutes";
 import resultRoutes from "./routes/resultRoutes";
 import rateAndReviewRoutes from "./routes/rateAndReviewRoutes";
 import { startConsumer } from "../infrastructure/messageBroker/consumerRpc";
-import { jwtMiddleware } from "../infrastructure/jwt/verifyToken";
 import videoRoutes from "./controllers/streaming/videoStreaming";
 
 dotenv.config();
@@ -30,16 +29,12 @@ app.use(
 );
 
 // Health check route
-app.get(
-  "/api/content-management",
-  jwtMiddleware,
-  (req: Request, res: Response) => {
-    res.status(200).json({
-      message: `Content Management is healthy! Running on port: ${PORT}`,
-      environment: isProduction ? "production" : "development",
-    });
-  }
-);
+app.get("/api/content-management", (req: Request, res: Response) => {
+  res.status(200).json({
+    message: `Content Management is healthy! Running on port: ${PORT}`,
+    environment: isProduction ? "production" : "development",
+  });
+});
 
 // Apply routes
 app.use("/api/content-management/category", categoryRoutes);
@@ -59,7 +54,7 @@ app.use("*", (req: Request, res: Response) => {
   });
 });
 
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
   console.log(
     `🌱🌱🌱 Content Management is running on port ${PORT} in ${
       isProduction ? "🌟 production" : "🚧 development"
@@ -68,4 +63,22 @@ app.listen(PORT, async () => {
 
   await dbConnections();
   startConsumer("content-management-service");
+});
+
+// Handle SIGTERM for graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("Received SIGTERM, shutting down gracefully...");
+  server.close(() => {
+    console.log("Closed remaining connections");
+    process.exit(0);
+  });
+});
+
+// Optional: Handle other termination signals like SIGINT (Ctrl+C)
+process.on("SIGINT", () => {
+  console.log("Received SIGINT, shutting down gracefully...");
+  server.close(() => {
+    console.log("Closed remaining connections");
+    process.exit(0);
+  });
 });

@@ -10,7 +10,10 @@ const express_http_proxy_1 = __importDefault(require("express-http-proxy"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const PORT = Number(process.env.PORT) || 3000;
-const ALLOWED_ORIGINS = [process.env.FRONTEND_URL];
+const ALLOWED_ORIGINS = [
+    process.env.FRONTEND_URL_1,
+    process.env.FRONTEND_URL_2,
+];
 const app = (0, express_1.default)();
 const isProduction = process.env.NODE_ENV === "production";
 app.use((0, cookie_parser_1.default)());
@@ -20,7 +23,7 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
 }));
 const proxyRoutes = [
-    { pathRegex: /^\/api\/users/, target: process.env.USERS_URL },
+    { pathRegex: /^\/api\/users/, target: process.env.AUTH_URL },
     { pathRegex: /^\/api\/chat-service/, target: process.env.CHAT_SERVICE_URL },
     {
         pathRegex: /^\/api\/content-management/,
@@ -38,6 +41,7 @@ const proxyRoutes = [
 app.get("/", (req, res) => {
     res.status(200).json({
         message: `API Gateway is healthy! Running on port: ${PORT}`,
+        health: true,
         environment: isProduction ? "production" : "development",
     });
 });

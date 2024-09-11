@@ -32,7 +32,10 @@ app.use("/", (req, res) => {
     });
 });
 app.use((0, cors_1.default)({
-    origin: [process.env.FRONTEND_URL],
+    origin: [
+        process.env.FRONTEND_URL_1,
+        process.env.FRONTEND_URL_2,
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
 }));

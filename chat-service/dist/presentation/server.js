@@ -30,7 +30,10 @@ const isProduction = process.env.NODE_ENV === "production";
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: [process.env.FRONTEND_URL],
+    origin: [
+        process.env.FRONTEND_URL_1,
+        process.env.FRONTEND_URL_2,
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
 }));
@@ -63,9 +66,8 @@ const io = new socket_io_1.Server(server, {
     pingTimeout: 60000,
     cors: {
         origin: [
-            "http://localhost:5173",
-            "https://learn-voyage-frontend.vercel.app",
-            "https://learn-voyage.jamsheerply.life",
+            process.env.FRONTEND_URL_1,
+            process.env.FRONTEND_URL_2,
         ],
     },
 });

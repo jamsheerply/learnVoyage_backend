@@ -29,9 +29,10 @@ app.use(
 );
 
 // Health check route
-app.get("/api/content-management", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: `Content Management is healthy! Running on port: ${PORT}`,
+    health: true,
     environment: isProduction ? "production" : "development",
   });
 });

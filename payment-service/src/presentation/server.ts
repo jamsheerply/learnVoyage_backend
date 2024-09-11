@@ -25,9 +25,10 @@ app.use(
 );
 
 // Health check route
-app.get("/api/payment-service", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: `Payment service is healthy! Running on port: ${PORT}`,
+    health: true,
     environment: isProduction ? "production" : "development",
   });
 });

@@ -14,9 +14,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
-app.use("/api/notification-service", (req: Request, res: Response) => {
+app.use("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: `notification service is healthy! Running on port: ${PORT}`,
+    health: true,
     environment: isProduction ? "production" : "development",
   });
 });

@@ -23,11 +23,14 @@ app.use(
 );
 
 // Health check route
-app.get("/api/users/", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
+  // setTimeout(() => {
   res.status(200).json({
     message: `Auth service is healthy! Running on port: ${PORT}`,
+    health: true,
     environment: isProduction ? "production" : "development",
   });
+  // }, 36000);
 });
 
 // Production routes (for use with Ingress)

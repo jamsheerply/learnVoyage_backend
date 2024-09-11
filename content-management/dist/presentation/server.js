@@ -37,9 +37,10 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
 }));
 // Health check route
-app.get("/api/content-management", (req, res) => {
+app.get("/", (req, res) => {
     res.status(200).json({
         message: `Content Management is healthy! Running on port: ${PORT}`,
+        health: true,
         environment: isProduction ? "production" : "development",
     });
 });

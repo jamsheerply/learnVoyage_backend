@@ -27,9 +27,10 @@ app.use(
 );
 
 // Health check route
-app.get("/api/chat-service", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: `Chat service is healthy! Running on port: ${PORT}`,
+    health: true,
     environment: isProduction ? "production" : "development",
   });
 });

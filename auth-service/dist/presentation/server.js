@@ -31,11 +31,14 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
 }));
 // Health check route
-app.get("/api/users/", (req, res) => {
+app.get("/", (req, res) => {
+    // setTimeout(() => {
     res.status(200).json({
         message: `Auth service is healthy! Running on port: ${PORT}`,
+        health: true,
         environment: isProduction ? "production" : "development",
     });
+    // }, 36000);
 });
 // Production routes (for use with Ingress)
 app.use("/api/users/auth", userRoutes_1.default);

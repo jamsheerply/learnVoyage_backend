@@ -35,9 +35,10 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
 }));
 // Health check route
-app.get("/api/chat-service", (req, res) => {
+app.get("/", (req, res) => {
     res.status(200).json({
         message: `Chat service is healthy! Running on port: ${PORT}`,
+        health: true,
         environment: isProduction ? "production" : "development",
     });
 });

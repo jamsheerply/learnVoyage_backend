@@ -22,7 +22,7 @@ app.use(
 );
 
 const proxyRoutes = [
-  { pathRegex: /^\/api\/users/, target: process.env.USERS_URL },
+  { pathRegex: /^\/api\/users/, target: process.env.AUTH_URL },
   { pathRegex: /^\/api\/chat-service/, target: process.env.CHAT_SERVICE_URL },
   {
     pathRegex: /^\/api\/content-management/,
@@ -41,6 +41,7 @@ const proxyRoutes = [
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: `API Gateway is healthy! Running on port: ${PORT}`,
+    health: true,
     environment: isProduction ? "production" : "development",
   });
 });

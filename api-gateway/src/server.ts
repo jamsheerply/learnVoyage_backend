@@ -7,7 +7,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const PORT: number = Number(process.env.PORT) || 3000;
-const ALLOWED_ORIGINS: string[] = [process.env.FRONTEND_URL as string];
+const ALLOWED_ORIGINS: string[] = [
+  process.env.FRONTEND_URL_1 as string,
+  process.env.FRONTEND_URL_2 as string,
+];
 
 const app: Application = express();
 const isProduction = process.env.NODE_ENV === "production";

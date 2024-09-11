@@ -20,7 +20,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL as string],
+    origin: [
+      process.env.FRONTEND_URL_1 as string,
+      process.env.FRONTEND_URL_2 as string,
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -65,9 +68,8 @@ const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
     origin: [
-      "http://localhost:5173",
-      "https://learn-voyage-frontend.vercel.app",
-      "https://learn-voyage.jamsheerply.life",
+      process.env.FRONTEND_URL_1 as string,
+      process.env.FRONTEND_URL_2 as string,
     ],
   },
 });

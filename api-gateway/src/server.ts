@@ -42,11 +42,23 @@ const proxyRoutes = [
 ];
 
 app.get("/", (req: Request, res: Response) => {
+  // const sendResponse = () => {
   res.status(200).json({
     message: `API Gateway is healthy! Running on port: ${PORT}`,
     health: true,
     environment: isProduction ? "production" : "development",
   });
+  // };
+
+  // if (!isProduction) {
+  //   // Apply 50-second delay only in development
+  //   setTimeout(sendResponse, 50000);
+  //   console.log("Development mode: Applying 50-second delay");
+  // } else {
+  //   // In production, send the response immediately
+  //   console.log("Production mode: Sending response immediately");
+  //   sendResponse();
+  // }
 });
 
 app.use((req: Request, res: Response, next: NextFunction) => {

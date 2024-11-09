@@ -27,15 +27,25 @@ app.use(
 
 // Health check route
 app.get("/", (req: Request, res: Response) => {
-  // setTimeout(() => {
+  // const sendResponse = () => {
   res.status(200).json({
     message: `Auth service is healthy! Running on port: ${PORT}`,
     health: true,
     environment: isProduction ? "production" : "development",
   });
-  // }, 36000);
-});
+  // };
 
+  // if (!isProduction) {
+  //   // Apply 50-second delay only in development
+  //   setTimeout(sendResponse, 50000);
+  //   console.log("Development mode: Applying 50-second delay");
+  // } else {
+  //   // In production, send the response immediately
+  //   console.log("Production mode: Sending response immediately");
+  //   sendResponse();
+  // }
+});
+//
 // Production routes (for use with Ingress)
 app.use("/api/users/auth", userRoutes);
 app.use("/api/users/instructor", instructorRoutes);

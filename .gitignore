@@ -1,3 +1,5 @@
-# Ignore all files in manifests/configMaps except .gitkeep
+# Ignore everything in configMaps directory
 manifest/configMaps/*
-!manifests/configMaps/.gitkeep
+
+# Don't ignore .gitkeep
+!manifest/configMaps/.gitkeep

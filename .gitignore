@@ -3,3 +3,8 @@ manifest/configMaps/*
 
 # Don't ignore .gitkeep
 !manifest/configMaps/.gitkeep
+
+# Ignore VS Code configuration directory
+.vscode
+
+

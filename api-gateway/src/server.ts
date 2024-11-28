@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import proxy from "express-http-proxy";
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 
 dotenv.config();
 
@@ -41,24 +42,15 @@ const proxyRoutes = [
   },
 ];
 
+// API Gateway URL
+const apiGatewayUrl = process.env.API_GATEWAY_URL!;
+
 app.get("/", (req: Request, res: Response) => {
-  // const sendResponse = () => {
   res.status(200).json({
     message: `API Gateway is healthy! Running on port: ${PORT}`,
     health: true,
     environment: isProduction ? "production" : "development",
   });
-  // };
-
-  // if (!isProduction) {
-  //   // Apply 50-second delay only in development
-  //   setTimeout(sendResponse, 50000);
-  //   console.log("Development mode: Applying 50-second delay");
-  // } else {
-  //   // In production, send the response immediately
-  //   console.log("Production mode: Sending response immediately");
-  //   sendResponse();
-  // }
 });
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -73,8 +65,61 @@ app.use((req: Request, res: Response) => {
   res.status(404).send("Not Found");
 });
 
+// Function to call APIs concurrently and log all outputs
+const callAllApis = async () => {
+  console.log("Calling APIs...");
+
+  const apiCalls = proxyRoutes.map((route) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (route.target) {
+          console.log(`Calling ${route.target}`);
+          const response = await fetch(route.target);
+          if (!response.ok) {
+            console.error(
+              `Failed to connect to ${route.target}. Status: ${response.status}`
+            );
+            reject(new Error(`Failed to connect to ${route.target}`));
+          } else {
+            console.log(`Successfully connected to ${route.target}`);
+            resolve(`Successfully connected to ${route.target}`);
+          }
+        }
+      } catch (error) {
+        console.error(`Error during API call to ${route.target}:`, error);
+        reject(error);
+      }
+    });
+  });
+
+  // Add the API Gateway URL call
+  apiCalls.push(
+    new Promise(async (resolve, reject) => {
+      try {
+        console.log(`Calling ${apiGatewayUrl}`);
+        const gatewayResponse = await fetch(apiGatewayUrl);
+        if (!gatewayResponse.ok) {
+          console.error(
+            `Failed to connect to ${apiGatewayUrl}. Status: ${gatewayResponse.status}`
+          );
+          reject(new Error(`Failed to connect to ${apiGatewayUrl}`));
+        } else {
+          console.log(`Successfully connected to ${apiGatewayUrl}`);
+          resolve(`Successfully connected to ${apiGatewayUrl}`);
+        }
+      } catch (error) {
+        console.error(`Error during API call to ${apiGatewayUrl}:`, error);
+        reject(error);
+      }
+    })
+  );
+
+  // Run all promises concurrently and wait for all to settle
+  await Promise.allSettled(apiCalls); // Ensures all results (success or failure) are logged
+};
+
 // Start the server and store the instance in a variable
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(
     `🌱🌱🌱 API Gateway is running on port ${PORT} in ${
       isProduction ? "🌟 production" : "🚧 development"
@@ -82,20 +127,5 @@ const server = app.listen(PORT, () => {
   );
 });
 
-// Handle SIGTERM for graceful shutdown
-process.on("SIGTERM", () => {
-  console.log("Received SIGTERM, shutting down gracefully...");
-  server.close(() => {
-    console.log("Closed remaining connections");
-    process.exit(0);
-  });
-});
-
-// Optional: Handle other termination signals like SIGINT (Ctrl+C)
-process.on("SIGINT", () => {
-  console.log("Received SIGINT, shutting down gracefully...");
-  server.close(() => {
-    console.log("Closed remaining connections");
-    process.exit(0);
-  });
-});
+// Call APIs every 14 seconds
+const intervalId = setInterval(callAllApis, 14000);
